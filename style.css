@@ -1,19 +1,23 @@
 /* Standard */
-body
+html
 {
-	/*background-attachment: fixed;
-	background-image: url('img/bg.jpg');
-	background-repeat: repeat;*/
+	background: url('data/img/bg.png') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
 
 #bg-video
 {
-	display: block;
-	position: fixed;
-	left: 0;
-	top: 0;
-	width:100%;
-	height: auto;
+    position: fixed;
+    top:0;
+	bottom:0;
+    left:0;
+	right:0;
+	object-fit: cover;
+	min-width: 100%;
+	min-height: 100%;
 }
 
 /* Hacky stuff */

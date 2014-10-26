@@ -55,6 +55,7 @@ function initialize()
 	});
 	
 	initializeValidation();
+	initializeDropBeats();
 	
 	//Change up the background video
 	var randomVideo = Math.floor(Math.random()*(3-1+1)+1);
@@ -120,70 +121,76 @@ function initializeValidation()
 }
 
 /*
- * Submits the content of the form via AJAX. Returns a JSON error if something screws up.
+ * Initialize the "Drop Beats" button functionality
  */
-$('#drop-beat').on('click', function(event){
-	event.preventDefault();
-	
-	if ($('#foffbox-form').valid())
-	{
-		url = $('#youtube-link').val();
-		message = $('#message').val();
-		signUp = true;
-		email = $('#email').val();
+function initializeDropBeats()
+{
+	/*
+	 * Submits the content of the form via AJAX. Returns a JSON error if something screws up.
+	 */
+	$('#drop-beat').on('click', function(event){
+		event.preventDefault();
+		
+		if ($('#foffbox-form').valid())
+		{
+			url = $('#youtube-link').val();
+			message = $('#message').val();
+			signUp = true;
+			email = $('#email').val();
 
-		message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
-		
-		$('#alert-success').hide();
-		$('#alert-failure').hide();
-		
-		$('#drop-beat').prop('disabled', true);
-		$('#alert-loading').show();
-		
-		$.ajax({
-			type: 'POST',
-			url: 'process-form.php',
-			dataType: 'json',
-			data:
-			{
-				youtubeUrl:url,
-				message:message,
-				signUp:signUp,
-				emailAddress:email
-			},
-			success: function(data)
-			{
-				$('#alert-loading').hide();
+			message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
 			
-				if (data['success'])
+			$('#alert-success').hide();
+			$('#alert-failure').hide();
+			
+			$('#drop-beat').prop('disabled', true);
+			$('#alert-loading').show();
+			
+			$.ajax({
+				type: 'POST',
+				url: 'process-form.php',
+				dataType: 'json',
+				data:
 				{
-					var successMessage = data['message'];
-					//On success, clear out all the fields and re-focus the first text box so you can enter a new song right away
-					$('#youtube-link').val('');
-					$('#message').val('');
-					$('#youtube-link').focus();
-					$('#message').trigger('keypress');
-					$('#alert-success').show();
-					$('#success-message').html(successMessage);
-				}
-				else
+					youtubeUrl:url,
+					message:message,
+					signUp:signUp,
+					emailAddress:email
+				},
+				success: function(data)
 				{
-					var errorMessage = data['message'];
-					$('#alert-failure').html(errorMessage).show();
-				}
+					$('#alert-loading').hide();
 				
-				$('#drop-beat').prop('disabled', false);
-			},
-			error: function(err)
-			{
-				$('#alert-loading').hide();
-				$('#alert-success').hide();
-				$('#alert-failure').html("Something went very wrong, and we're not quite sure what. Try again later.").show();
-				$('#drop-beat').prop('disabled', false);
-			}
-		});
-	}
-});
+					if (data['success'])
+					{
+						var successMessage = data['message'];
+						//On success, clear out all the fields and re-focus the first text box so you can enter a new song right away
+						$('#youtube-link').val('');
+						$('#message').val('');
+						$('#youtube-link').focus();
+						$('#message').trigger('keypress');
+						$('#alert-success').show();
+						$('#success-message').html(successMessage);
+					}
+					else
+					{
+						var errorMessage = data['message'];
+						$('#alert-failure').html(errorMessage).show();
+					}
+					
+					$('#drop-beat').prop('disabled', false);
+				},
+				error: function(err)
+				{
+					$('#alert-loading').hide();
+					$('#alert-success').hide();
+					$('#alert-failure').html("Something went very wrong, and we're not quite sure what. Try again later.").show();
+					$('#drop-beat').prop('disabled', false);
+				}
+			});
+		}
+	});
+}
 
 /*
  * Gets a new song suggestion and inserts it into the tooltip on mouseover.

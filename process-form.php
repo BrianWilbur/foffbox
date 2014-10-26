@@ -18,7 +18,12 @@ function validateData()
 	$message = strip_tags(trim($_POST['message']), "<br>");
 	$message = str_replace("\"", "&quot;", $message);
 	$signUp = $_POST['signUp'];
-	$emailAddress = trim($_POST['emailAddress']);
+	
+	$emailAddress = '';
+	if (!empty($_POST['emailAddress']))
+	{
+		$emailAddress = trim($_POST['emailAddress']);
+	}
 	
 	if (empty($youtubeUrl))
 	{
