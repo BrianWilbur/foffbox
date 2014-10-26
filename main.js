@@ -1,6 +1,4 @@
-//var loadingTitle = '<img src="img/loading.GIF"/><br><br>Asking 8-ball...';
-var loadingTitle = '<img src="img/loading.GIF"/>';
-//var loadingTitle = '';
+var loadingTitle = '<img src="data/img/loading.gif"/>';
 var suggestionMousedOver = false;
 
 /*
@@ -48,7 +46,7 @@ function initialize()
 	initializeValidation();
 	
 	var randomVideo = Math.floor(Math.random()*(3-1+1)+1);
-	$('#bg-video').first('source').attr('src', 'vid/video' + randomVideo + '.mp4');
+	$('#bg-video').first('source').attr('src', 'data/vid/video' + randomVideo + '.mp4');
 }
 
 /*

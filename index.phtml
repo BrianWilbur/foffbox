@@ -1,9 +1,10 @@
 <?php include("../basedir.php"); ?>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="../js/google-analytics.js"></script>
+<script src="main.js"></script>
+<script src="<?php echo(BASEDIR); ?>/js/global.js"></script>
+<script src="<?php echo(BASEDIR); ?>/js/google-analytics.js"></script>
 
 <!--
 
@@ -41,15 +42,14 @@ Go home. You are drunk.
 		<!-- Bootstrap CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="style.css">
-		<link rel="stylesheet" href="../css/style-navbar.css">
 		<title>The Foffbox Music Digest!</title>
 	</head>
 	<body style="background-color: #e3e3e3;">
 	
-		<?php include("../php/navbar.php"); ?>
+		<?php include("../navbar/navbar.phtml"); ?>
 
 		<video id="bg-video" muted autoplay loop>
-			<source src="vid/video.mp4" type="video/mp4">
+			<source src="data/vid/video.mp4" type="video/mp4">
 		</video>
 
 		<div class="row" style="margin:0 !important;">
@@ -86,7 +86,7 @@ Go home. You are drunk.
 											<input id="email" type="email" class="form-control" name="email" placeholder="e.g. foffythefoff@gmail.com" maxlength="64" required/><br> -->
 											
 											<!-- Loading alert -->
-											<div id="alert-loading" class="alert alert-info alert-hide"><img src="img/loading.GIF"/> Dropping requested beat...hold on a second.</div>
+											<div id="alert-loading" class="alert alert-info alert-hide"><img src="data/img/loading.gif"/> Dropping requested beat...hold on a second.</div>
 											
 											<!-- Success alert -->
 											<div id="alert-success" class="alert alert-success alert-hide">
@@ -120,20 +120,5 @@ Go home. You are drunk.
 		</div>
 	</body>
 </html>
-
-<!-- Start of StatCounter Code for Default Guide -->
-<script type="text/javascript">
-var sc_project=10056021; 
-var sc_invisible=1; 
-var sc_security="bcd18b1d"; 
-var scJsHost = (("https:" == document.location.protocol) ?
-"https://secure." : "http://www.");
-document.write("<sc"+"ript type='text/javascript' src='" +
-scJsHost+
-"statcounter.com/counter/counter.js'></"+"script>");
-</script>
-
-<script src="script.js"></script>
-<script src="../js/global.js"></script>
 
 <script> $('#navbar-foffbox').addClass('active'); </script>
