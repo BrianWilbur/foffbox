@@ -1,0 +1,35 @@
+<div id="drop-beats-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+			
+					<h2>The Mini Foffbox</h2>
+					<h4>Just as strong as <a href="../index.php">daddy</a>.</h4>
+			
+					<br><br>
+			
+					<!-- Youtube URL -->
+					<label for="drop-beats-url">Drop beats to send to the world:</strong></label> <span id="drop-beats-suggestion" class="pull-right field-subtext" data-toggle="tooltip" title="Hello world!">Need a suggestion? <span class="glyphicon glyphicon-question-sign"></span></span>
+					<input id="drop-beats-url" type="text" class="form-control" name="youtubeUrl" placeholder="e.g. youtube.com/watch?v=ZZ5LpwO-An4" maxlength="64" pattern="((https:\/\/)|(http:\/\/))?((m.)|(www.))?(youtube.com\/watch\?v=)([a-zA-Z0-9\-\_]){9,12}" required /><br>
+
+					<!-- Message -->
+					<label for="drop-beats-message">Include a message:</label> <span id="drop-beats-message-remaining" class="pull-right field-subtext">??? remaining</span>
+					<textarea id="drop-beats-message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
+					
+					<!-- Loading alert -->
+					<div id="drop-beats-alert-loading" class="alert alert-info alert-hide"><img src="../img/loading.GIF"/> Dropping requested beat...hold on a second.</div>
+					
+					<!-- Success alert -->
+					<div id="drop-beats-alert-success" class="alert alert-success alert-hide">
+						<span id="drop-beats-alert-success-message"></span> Soon we'll all get to hear those delicious tunes.<br><br>
+						Feel free to get right on it and send us another.
+					</div>
+					
+					<!-- Failure alert -->
+					<div id="drop-beats-alert-failure" class="alert alert-danger alert-hide">Something went wrong, but we're not sure what. Try again later...we'll have it fixed by then. Promise.</div>
+					
+					<button id="drop-beat" class="btn btn-primary btn-large btn-block"><span class="glyphicon glyphicon-fire"></span>&nbsp; Drop that beat!</button><br>
+			</div>
+		</div>
+	</div>
+</div>

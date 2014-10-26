@@ -1,0 +1,280 @@
+/* Standard */
+body
+{
+	/*background-attachment: fixed;
+	background-image: url('img/bg.jpg');
+	background-repeat: repeat;*/
+}
+
+#bg-video
+{
+	display: block;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width:100%;
+	height: auto;
+}
+
+/* Hacky stuff */
+.row-padding-fix
+{
+	padding:0 !important;
+	margin: 0 !important;
+}
+.center-col
+{
+	text-align:center;
+}
+
+/* Bootstrap overrides */
+.jumbotron
+{
+	background-color: rgba(200, 200, 200, 0.90) !important;
+	border-radius: 7px;
+	padding: 30px !important;
+	margin: 0px !important;
+}
+.jumbotron h1
+{
+	margin-top: 0 !important;
+}
+.jumbotron .well
+{
+	background-color: rgba(200, 200, 200, 0.90) !important;
+}
+.well p
+{
+	cursor: default;
+}
+#well-info
+{
+	background-color: rgba(200, 200, 200, 0.90) !important;
+}
+
+.theme
+{
+	color:#555 !important;
+	text-align: center !important;
+}
+.tooltip-inner
+{
+	width: auto !important;
+}
+
+/* Custom */
+/* Main Page */
+#foffbox-form, #foffbox-form-group
+{
+	margin: 0 !important;
+}
+#well-optional
+{
+	margin:0 !important;
+}
+#message
+{
+	max-width:100%;
+}
+.field-subtext
+{
+	/*color: #428BCA !important;*/
+	color: #777 !important;
+	cursor: default;
+}
+#container-email
+{
+	display:none;
+}
+#suggestion, #drop-beats-suggestion
+{
+	color: #3D72E3 !important;
+	cursor: pointer;
+	-moz-user-select: none; 
+	-khtml-user-select: none; 
+	-webkit-user-select: none; 
+	-o-user-select: none;
+}
+
+/* Required fields & error messages */
+.required
+{
+	color: #3C9FC9;
+}
+.required-form
+{
+	color: #3C9FC9 !important;
+}
+
+/* Error messages */
+.alert-hide
+{
+	display: none;
+}
+#alert-loading img
+{
+	margin-right: 8px;
+}
+#youtube-link-error, #message-error, #email-error
+{
+	color: #DB5353;
+	margin-top:3px;
+}
+#youtube-link-error, #email-error, #message-error
+{
+	margin-bottom:15px;
+}
+
+.txt-fixed
+{
+	font-family:"Consolas", Monospace;
+	font-size: 12px;
+}
+
+/* Checkbox */
+#accept-label
+{
+	font-weight: normal;
+}
+
+/* Footer */
+#footer
+{
+	background-color: rgba(220, 220, 210, 0.60) !important;
+	border-radius:7px;
+	font-size: 11px;
+	text-align: center;
+}
+#footer p
+{
+	cursor: default;
+	font-size: 12px;
+	margin-bottom: 0 !important;
+}
+
+/* Foffbox Player */
+#foffbox-player-report:hover
+{
+	color: #B52626;
+}
+#foffbox-player-drop:hover
+{
+	color: #5999D8;
+}
+#foffbox-player-quote p
+{
+	color: #DDD;
+	font-size: 22px;
+}
+#foffbox-player-quote footer
+{
+	color: #666;
+}
+.foffbox-player-button
+{
+	cursor: pointer;
+}
+.foffbox-player-button:hover
+{
+	color: #44A650;
+}
+.foffbox-player-button-active
+{
+	color: #29E33F !important;
+}
+.foffbox-player-button-inactive
+{
+	color: #999 !important;
+	cursor: default !important;
+}
+#foffbox-player-video
+{
+	border: 1px solid #333;
+	border-radius: 4px;
+	width: 100%;
+}
+
+/* Foffbox Player Comments */
+#comment-field
+{
+	background-color: #111;
+	border-color: #555;
+	color: #FAF7ED;
+	max-width: 100%;
+}
+#comment-area
+{
+	background-color: #222;
+	border-color: #000;
+	color: #777;
+}
+#comment-thread .well
+{
+	background-color: #C5C5C5;
+	border-color: #C3C3C3;
+	color: #444 !important;
+}
+.comment-subtext
+{
+	font-style: italic;
+}
+
+/* Webkit slider */
+input[type=range]{
+    -webkit-appearance: none !important;
+	outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+	background-color: #333;
+	border: none;
+	height: 2px;
+	outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance:none !important;
+	background-color: #CCC;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	margin-top: -5px;
+	width: 12px;
+}
+
+/* Mozilla slider */
+input[type="range"]::-moz-range-track{
+	-moz-appearance:none !important;
+	background-color: #333;
+	border: none;
+	height: 2px;
+	outline: none;
+}
+
+input[type="range"]::-moz-range-thumb{
+	-moz-appearance:none !important;
+	background-color: #CCC;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	width: 12px;
+}
+
+/* Foffbox Player "Drop Beats" dialog */
+#drop-beats-message
+{
+	max-width: 100%;
+}
+#drop-beats-url, #drop-beats-message
+{
+	color: #000 !important;
+}
+
+/* Heheheheheheh */
+.greentext
+{
+	color: #789922;
+}
