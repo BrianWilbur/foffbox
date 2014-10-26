@@ -1,4 +1,4 @@
-var loadingTitle = '<img src="../img/loading.GIF"/>';
+var loadingTitle = '<img src="img/loading.gif"/>';
 var suggestionMousedOver = false;
 
 /* Hides all alerts within the dialog */
@@ -18,13 +18,13 @@ function dropBeat()
 	email = null;
 
 	message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
-	
+
 	$('#drop-beats-alert-success').hide();
 	$('#drop-beats-alert-failure').hide();
-	
+
 	$('#drop-beat').prop('disabled', true);
 	$('#drop-beats-alert-loading').show();
-	
+
 	$.ajax({
 		type: 'POST',
 		url: '../process-form.php',
@@ -39,7 +39,7 @@ function dropBeat()
 		success: function(data)
 		{
 			$('#drop-beats-alert-loading').hide();
-		
+
 			if (data['success'])
 			{
 				var successMessage = data['message'];
@@ -56,7 +56,7 @@ function dropBeat()
 				var errorMessage = data['message'];
 				$('#drop-beats-alert-failure').html(errorMessage).show();
 			}
-			
+
 			$('#drop-beat').prop('disabled', false);
 		},
 		error: function(err)
@@ -76,7 +76,7 @@ function getSongSuggestion()
 {
 	$.ajax({
 		type: 'GET',
-		url: '../suggestions/get-suggestions.php',
+		url: '../get-suggestions.php',
 		dataType: 'text',
 		success: function(message)
 		{
@@ -103,7 +103,7 @@ $(document).on('keypress keyup keydown', '#drop-beats-message', function(event) 
 	var charsTyped = $(this).val().length;
 	var maxlength = $(this).attr('maxlength');
 	var remaining = maxlength - charsTyped;
-	
+
 	$('#drop-beats-message-remaining').html(remaining + '/' + maxlength + ' remaining');
 });
 
@@ -130,13 +130,9 @@ $(document).on('click', '#drop-beat', function(event){
 $(document).on('ready', function(event){
 	//This specific tooltip should be on top
 	$('#drop-beats-suggestion').tooltip({'placement': 'top', 'html': true, 'container':'body'});
-	
-	$('#drop-beats-suggestion').on('mouseover', function(event){
-		$('#drop-beats-suggestion').attr('title', loadingTitle).tooltip('fixTitle').tooltip('show');
-		suggestionMousedOver = true;
-		getSongSuggestion();
-	});
-	$('#drop-beats-suggestion').on('click', function(event){
+
+	//Show suggestions on mouseover/click
+	$('#drop-beats-suggestion').on('mouseover click', function(event){
 		$('#drop-beats-suggestion').attr('title', loadingTitle).tooltip('fixTitle').tooltip('show');
 		suggestionMousedOver = true;
 		getSongSuggestion();
