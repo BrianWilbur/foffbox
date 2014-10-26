@@ -1,1 +1,2 @@
 DirectoryIndex index.phtml index.html index.php index.htm default.htm index.php3
+ErrorDocument 404 /foffbox/404.html

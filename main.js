@@ -24,15 +24,18 @@ function initialize()
 	});
 	
 	//This specific tooltip should be on top
-	$('#suggestion').tooltip({'placement': 'top', 'html': true, 'container':'body'});
+	$('#suggestion').tooltip({
+		'container': 'body',
+		'html': true,
+		'placement': 'top'
+	});
 	
 	//Change suggestion on click/mouseover
-	$('#suggestion').on('click mouseover', function(event){
+	$('#suggestion').on('mouseover click', function(event){
 		$('#suggestion').attr('title', loadingTitle).tooltip('fixTitle').tooltip('show');
 		suggestionMousedOver = true;
 		getSongSuggestion();
 	});
-	
 	$('#suggestion').on('mouseout', function(event){
 		suggestionMousedOver = false;
 	});
