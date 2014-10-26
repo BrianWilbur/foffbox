@@ -1,0 +1,143 @@
+/* Bootstrap overrides/add-ons */
+.center-col
+{
+	text-align:center;
+}
+
+.glyphicon
+{
+	padding-bottom:2px;
+}
+
+.row-padding-fix
+{
+	padding:0 !important;
+	margin: 0 !important;
+}
+
+/* Foffbox Player */
+#foffbox-player-report:hover
+{
+	color: #B52626;
+}
+#foffbox-player-drop:hover
+{
+	color: #5999D8;
+}
+#foffbox-player-quote p
+{
+	color: #DDD;
+	font-size: 22px;
+}
+#foffbox-player-quote footer
+{
+	color: #666;
+}
+.foffbox-player-button
+{
+	cursor: pointer;
+}
+.foffbox-player-button:hover
+{
+	color: #44A650;
+}
+.foffbox-player-button-active
+{
+	color: #29E33F !important;
+}
+.foffbox-player-button-inactive
+{
+	color: #999 !important;
+	cursor: default !important;
+}
+#foffbox-player-video
+{
+	border: 1px solid #333;
+	border-radius: 4px;
+	width: 100%;
+}
+
+/* Foffbox Player Comments */
+#comment-field
+{
+	background-color: #111;
+	border-color: #555;
+	color: #FAF7ED;
+	max-width: 100%;
+}
+#comment-area
+{
+	background-color: #222;
+	border-color: #000;
+	color: #777;
+}
+#comment-thread .well
+{
+	background-color: #C5C5C5;
+	border-color: #C3C3C3;
+	color: #444 !important;
+}
+.comment-subtext
+{
+	font-style: italic;
+}
+
+/* Webkit slider */
+input[type=range]{
+    -webkit-appearance: none !important;
+	outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+	background-color: #333;
+	border: none;
+	height: 2px;
+	outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance:none !important;
+	background-color: #CCC;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	margin-top: -5px;
+	width: 12px;
+}
+
+/* Mozilla slider */
+input[type="range"]::-moz-range-track{
+	-moz-appearance:none !important;
+	background-color: #333;
+	border: none;
+	height: 2px;
+	outline: none;
+}
+
+input[type="range"]::-moz-range-thumb{
+	-moz-appearance:none !important;
+	background-color: #CCC;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	width: 12px;
+}
+
+/* Foffbox Player "Drop Beats" dialog */
+#drop-beats-message
+{
+	max-width: 100%;
+}
+#drop-beats-url, #drop-beats-message
+{
+	color: #000 !important;
+}
+
+/* Heheheheheheh */
+.greentext
+{
+	color: #789922;
+}

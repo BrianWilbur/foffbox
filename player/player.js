@@ -213,7 +213,7 @@ function reportComplete()
 function reportSongId(reportId)
 {
 	reported = true;
-	$('#foffbox-player-report').html('<img src="../img/loading-square.GIF"/>');
+	$('#foffbox-player-report').html('<img src="img/loading-square.gif"/>');
 	$('#foffbox-player-report').attr('disabled', true);
 	$('#foffbox-player-report').tooltip('hide');
 
