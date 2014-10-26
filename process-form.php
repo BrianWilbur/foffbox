@@ -173,8 +173,32 @@ function validateData()
 			return;
 		}
 	}
+	
+	//Get highest ID in DB (only used when called from Radio)
+	$sqlStatement = $pdo->prepare("SELECT MAX(`id`) as id FROM `submissions_archive`");
+	
+	//Even if this fails, we're still good -- the user doesn't care about this.
+	try
+	{
+		$sqlStatement->execute();
+	}
+	catch (\Exception $e)
+	{
+		echo(json_encode(array(
+			'message' => $slogan,
+			'success' => true
+		)));
+	}
+	
+	$results = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+	$result = $results[0];
+	$maxId = $result['id'];
 
-	echo(json_encode(array('success' => true, 'message' => $slogan)));
+	echo(json_encode(array(
+		'maxId' => $maxId,
+		'message' => $slogan,
+		'success' => true
+	)));
 	return;
 }
 

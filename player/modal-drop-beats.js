@@ -50,6 +50,16 @@ function dropBeat()
 				$('#drop-beats-url').focus();
 				$('#drop-beats-alert-success').show();
 				$('#drop-beats-alert-success-message').html(successMessage);
+				
+				//If slider exists...
+				if (data['maxId'])
+				{
+					if (data['maxId'] > 0)
+					{
+						maxId = data['maxId'];
+						$('#request-slider').attr('max', maxId);
+					}
+				}
 			}
 			else
 			{
