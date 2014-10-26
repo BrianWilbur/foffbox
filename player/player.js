@@ -70,7 +70,7 @@ function initialize()
 function renderComments(comments)
 {
 	$('#comment-thread').html('');
-
+	
 	if (comments.length > 0)
 	{
 		for (var i = 0; i < comments.length; i++)
@@ -185,9 +185,8 @@ function requestNewSong(requestId)
 				//Adjust height of comment box to match that of video before rendering comments
 				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
 				var commentTop = $('#comment-thread-wrapper').offset().top;
-				var finalHeight = leftSideBottom - commentTop;
+				var finalHeight = leftSideBottom - commentTop - 15;
 				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
-				$('#comment-thread-wrapper').css('overflow-y', 'auto');
 				
 				//Render comments
 				renderComments(data['comments']);
