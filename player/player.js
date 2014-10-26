@@ -3,6 +3,9 @@ var currentId = 0;
 var maxId = 0;
 var reported = false;
 
+//Turn on autoplay automatically on first play
+var playerStarted = false;
+
 //Play modes
 var shuffle = false;
 var autoplay = false;
@@ -58,6 +61,15 @@ function onPlayerStateChange(event)
 	if(event.data === 0)
 	{
 		shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
+	}
+	else if (event.data === 1 && !playerStarted)
+	{
+		playerStarted = true;
+		
+		if (!autoplay)
+		{
+			$('#foffbox-player-autoplay').trigger('click');
+		}
 	}
 }
 
