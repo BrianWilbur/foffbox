@@ -198,10 +198,11 @@ function requestNewSong(requestId)
 				var finalHeight = leftSideBottom - commentTop - 15;
 				
 				//If the comment is too long, just make the comment section the same as the current height of the entire comment area
-				var commentAreaHeight = $('#comment-area').height();
-				if (finalHeight < commentAreaHeight)
+				var commentFormHeight = $('#comment-group').height();
+				console.log(commentFormHeight);
+				if (finalHeight < commentFormHeight)
 				{
-					finalHeight = commentAreaHeight;
+					finalHeight = commentFormHeight;
 				}
 				
 				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
