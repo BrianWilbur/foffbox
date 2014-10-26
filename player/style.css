@@ -16,6 +16,12 @@
 }
 
 /* Foffbox Player */
+#foffbox-player
+{
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
 #foffbox-player-report:hover
 {
 	color: #B52626;
@@ -35,6 +41,7 @@
 }
 .foffbox-player-button
 {
+	border-bottom: none !important;
 	cursor: pointer;
 }
 .foffbox-player-button:hover
@@ -56,6 +63,10 @@
 	border-radius: 4px;
 	width: 100%;
 }
+#foffbox-player-toolbar
+{
+	text-align: center;
+}
 
 /* Foffbox Player Comments */
 #comment-field
@@ -68,8 +79,12 @@
 #comment-area
 {
 	background-color: #222;
-	border-color: #000;
+	border: 1px solid #111;
+	border-radius: 5px;
+	padding: 15px !important;
 	color: #777;
+	margin-bottom: 0;
+	word-wrap: break-word;
 }
 #comment-thread .well
 {

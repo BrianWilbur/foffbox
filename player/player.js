@@ -182,9 +182,17 @@ function requestNewSong(requestId)
 				//Set the URL's hash to include the requested ID (linking to & bookmarking beats! Sweet!)
 				document.location.hash = currentId;
 				
+				//Adjust height of comment box to match that of video before rendering comments
+				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
+				var commentTop = $('#comment-thread-wrapper').offset().top;
+				var finalHeight = leftSideBottom - commentTop;
+				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
+				$('#comment-thread-wrapper').css('overflow-y', 'auto');
+				
 				//Render comments
 				renderComments(data['comments']);
 				
+				//Adjust request slider
 				$('#request-slider').attr('max', maxId);
 				$('#request-slider').val(currentId);
 				$('#request-slider-val').html('#' + currentId);
