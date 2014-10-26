@@ -7,6 +7,12 @@ var reported = false;
 var shuffle = false;
 var autoplay = false;
 
+(function($) {
+    $.fn.hasScrollBar = function() {
+        return this.get(0).scrollHeight > this.height();
+    }
+})(jQuery);
+
 //Initialize a new Youtube player
 var player;
 function onYouTubeIframeAPIReady() {
@@ -182,7 +188,11 @@ function requestNewSong(requestId)
 				//Set the URL's hash to include the requested ID (linking to & bookmarking beats! Sweet!)
 				document.location.hash = currentId;
 				
-				//Adjust height of comment box to match that of video before rendering comments
+				//Reset height of comment area
+				$('#comment-field').css('height', '64px');
+				
+				//Adjust height of comment box to match that of video before rendering comments (unless the quote is too big)
+				var quoteBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
 				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
 				var commentTop = $('#comment-thread-wrapper').offset().top;
 				var finalHeight = leftSideBottom - commentTop - 15;
@@ -190,6 +200,15 @@ function requestNewSong(requestId)
 				
 				//Render comments
 				renderComments(data['comments']);
+				
+				if ($('#comment-thread-wrapper').hasScrollBar())
+				{
+					$('#comment-thread-wrapper').css('padding-right', '5px');
+				}
+				else
+				{
+					$('#comment-thread-wrapper').css('padding-right', '0');
+				}
 				
 				//Adjust request slider
 				$('#request-slider').attr('max', maxId);

@@ -74,6 +74,8 @@
 	background-color: #111;
 	border-color: #555;
 	color: #FAF7ED;
+	min-height: 64px;
+	min-width: 100%;
 	max-width: 100%;
 }
 #comment-area
