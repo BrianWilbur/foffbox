@@ -51,7 +51,6 @@ function initialize()
 		var remaining = maxlength - charsTyped;
 		
 		$('#message-remaining').html(remaining + ' remaining');
-		//$('#message-remaining').html(remaining + '/' + maxlength + ' remaining');
 	});
 	
 	initializeValidation();
