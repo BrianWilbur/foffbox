@@ -1,9 +1,7 @@
 var loadingTitle = '<img src="data/img/loading.gif"/>';
 var suggestionMousedOver = false;
 
-/*
- * Document ready (duh!)
- */
+//On ready, initialize
 $(document).ready(function(){
 	initialize();
 });
@@ -39,9 +37,26 @@ function initialize()
 		suggestionMousedOver = false;
 	});
 	
+	//Hide alerts
+	$('input, textarea').on('keydown', function(event) {
+		$('#alert-loading').hide();
+		$('#alert-success').hide();
+		$('#alert-failure').hide();
+	});
+
+	//Show number of characters remaining on the Message field
+	$('#message').on('keypress keyup keydown', function(event) {
+		var charsTyped = $(this).val().length;
+		var maxlength = $(this).attr('maxlength');
+		var remaining = maxlength - charsTyped;
+		
+		$('#message-remaining').html(remaining + ' remaining');
+		//$('#message-remaining').html(remaining + '/' + maxlength + ' remaining');
+	});
+	
 	initializeValidation();
 	
-	//Change up the background video (don't know if want)
+	//Change up the background video
 	var randomVideo = Math.floor(Math.random()*(3-1+1)+1);
 	$('#bg-video').first('source').attr('src', 'data/vid/video' + randomVideo + '.mp4');
 }
@@ -193,27 +208,3 @@ function getSongSuggestion()
 		}
 	});
 }
-
-/*
- * Hide any alerts that may be visible when a field's text changes.
- */
-$('input, textarea').on('keydown', function(event) {
-	$('#alert-loading').hide();
-	$('#alert-success').hide();
-	$('#alert-failure').hide();
-});
-
-/*
- * "Characters remaining" message
- */
-$('#message').on('keypress keyup keydown', function(event) {
-	var charsTyped = $(this).val().length;
-	var maxlength = $(this).attr('maxlength');
-	var remaining = maxlength - charsTyped;
-	
-	$('#message-remaining').html(remaining + '/' + maxlength + ' remaining');
-});
-
-$('#well-info').on('click', function(event) {
-	$('#well-info-sub').toggle();
-});

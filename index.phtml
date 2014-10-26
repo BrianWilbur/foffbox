@@ -2,9 +2,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="main.js"></script>
 <script src="<?php echo(BASEDIR); ?>/js/global.js"></script>
 <script src="<?php echo(BASEDIR); ?>/js/google-analytics.js"></script>
+<script src="main.js"></script>
 
 <!--
 
@@ -49,7 +49,7 @@ Go home. You are drunk.
 		<?php include("../navbar/navbar.phtml"); ?>
 
 		<video id="bg-video" muted autoplay loop>
-			<source src="data/vid/video.mp4" type="video/mp4">
+			<source src="data/vid/video1.mp4" type="video/mp4">
 		</video>
 
 		<div class="row" style="margin:0 !important;">
@@ -78,7 +78,7 @@ Go home. You are drunk.
 											<input id="youtube-link" type="text" class="form-control" name="youtubeUrl" placeholder="e.g. youtube.com/watch?v=ZZ5LpwO-An4" maxlength="64" pattern="((https:\/\/)|(http:\/\/))?((m.)|(www.))?(youtube.com\/watch\?v=)([a-zA-Z0-9\-\_]){9,12}" required /><br>
 
 											<!-- Message -->
-											<label for="message">Include a message:</label> <span id="message-remaining" class="pull-right field-subtext">??? remaining</span>
+											<label for="message">Include a message:</label> <span id="message-remaining" class="pull-right field-subtext">500 remaining</span>
 											<textarea id="message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
 
 											<!-- Email address
@@ -102,10 +102,10 @@ Go home. You are drunk.
 											<hr/>
 											
 											<!-- Radio/wall buttons -->
-											<strong>Listen to beats others have dropped:</strong><br>
+											<strong>Listen to beats others have dropped:</strong><br><br>
 											<div class="btn-group btn-group-justified">
 												<a class="btn btn-info" href="player/player.phtml"><span class="glyphicon glyphicon-headphones"></span>&nbsp; All beats</a>
-												<a class="btn btn-info" href="wall.phtml"><span class="glyphicon glyphicon-headphones"></span>&nbsp; Weekly beats</a>
+												<a class="btn btn-info" href="wall/index.phtml"><span class="glyphicon glyphicon-headphones"></span>&nbsp; Weekly beats</a>
 											</div>
 										</div>
 									</div>
