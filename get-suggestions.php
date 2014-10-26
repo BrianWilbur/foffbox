@@ -3,7 +3,7 @@
 //Get suggestion and return it. Simple-easy!
 try
 {
-	$filename = "suggestion-messages.txt";
+	$filename = "data/txt/suggestion-messages.txt";
 	$slogans = file($filename);
 	$numLines = count($slogans);
 	$lineNumber = rand(1, $numLines) - 1;

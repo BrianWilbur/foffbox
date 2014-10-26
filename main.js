@@ -28,12 +28,8 @@ function initialize()
 	//This specific tooltip should be on top
 	$('#suggestion').tooltip({'placement': 'top', 'html': true, 'container':'body'});
 	
-	$('#suggestion').on('mouseover', function(event){
-		$('#suggestion').attr('title', loadingTitle).tooltip('fixTitle').tooltip('show');
-		suggestionMousedOver = true;
-		getSongSuggestion();
-	});
-	$('#suggestion').on('click', function(event){
+	//Change suggestion on click/mouseover
+	$('#suggestion').on('click mouseover', function(event){
 		$('#suggestion').attr('title', loadingTitle).tooltip('fixTitle').tooltip('show');
 		suggestionMousedOver = true;
 		getSongSuggestion();
@@ -45,6 +41,7 @@ function initialize()
 	
 	initializeValidation();
 	
+	//Change up the background video (don't know if want)
 	var randomVideo = Math.floor(Math.random()*(3-1+1)+1);
 	$('#bg-video').first('source').attr('src', 'data/vid/video' + randomVideo + '.mp4');
 }
@@ -180,7 +177,7 @@ function getSongSuggestion()
 {
 	$.ajax({
 		type: 'GET',
-		url: 'suggestions/get-suggestions.php',
+		url: 'get-suggestions.php',
 		dataType: 'text',
 		success: function(message)
 		{

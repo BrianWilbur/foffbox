@@ -7,7 +7,7 @@
 function validateData()
 {
 	//Prep slogan
-	$filename = "success-messages.txt";
+	$filename = "data/txt/success-messages.txt";
 	$slogans = file($filename);
 	$numLines = count($slogans);
 	$lineNumber = rand(1, $numLines);
