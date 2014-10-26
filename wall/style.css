@@ -1,0 +1,19 @@
+::-webkit-scrollbar {
+	width: 0 !important;
+}
+
+.tooltip-inner
+{
+	background-color: #000 !important;
+	border-color: #FFF !important;
+	font-size:17px !important;
+	max-width: 100% !important;
+	width: auto !important;
+	white-space:pre-wrap;
+}
+.tooltip.in
+{
+	border-color: #FFF !important;
+	filter: alpha(opacity=100) !important;
+	opacity: 1.0 !important;
+}

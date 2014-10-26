@@ -3,29 +3,21 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="../../js/greentext.js"></script>
+<script src="<?php echo(BASEDIR); ?>/js/greentext.js"></script>
+<script src="<?php echo(BASEDIR); ?>/js/google-analytics.js"></script>
 <script src="player.js"></script>
 <script src="modal-drop-beats.js"></script>
-<script src="../../js/google-analytics.js"></script>
-
-<style>
-.glyphicon
-{
-	padding-bottom:2px;
-}
-</style>
 
 <html>
 	<head>
 		<!-- Bootstrap CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="../style.css">
-		<link rel="stylesheet" href="../../css/style-navbar.css">
+		<link rel="stylesheet" href="style.css">
 		<title>Foffbox Radio</title>
 	</head>
 	<body style="background-color: #111 !important; background-image:none !important;">
 		
-		<?php include("../../php/navbar.php"); ?>
+		<?php include("../../navbar/navbar.phtml"); ?>
 		
 		<!-- Slider Bar (to select a song) -->
 		<div class="row row-padding-fix">
@@ -52,7 +44,7 @@
 		
 		<div id="loading" style="color:#DDD; text-align:center;">
 			Serving up some more beats, sit tight...<br>
-			<img src="../img/loading.GIF"/><br><br><br>
+			<img src="img/loading.gif"/><br><br><br>
 		</div>
 		
 		<div id="foffbox-player">

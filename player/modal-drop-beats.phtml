@@ -1,9 +1,23 @@
+<!-- Some inline styles -->
+<style>
+#drop-beats-suggestion
+{
+	color: #3D72E3 !important;
+	cursor: pointer;
+	-moz-user-select: none; 
+	-khtml-user-select: none; 
+	-webkit-user-select: none; 
+	-o-user-select: none;
+}
+</style>
+
+<!-- Modal -->
 <div id="drop-beats-modal" class="modal fade" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
 			
-					<h2>The Mini Foffbox</h2>
+					<h2>Foffbox Junior</h2>
 					<h4>Just as strong as <a href="../index.php">daddy</a>.</h4>
 			
 					<br><br>
@@ -17,7 +31,7 @@
 					<textarea id="drop-beats-message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
 					
 					<!-- Loading alert -->
-					<div id="drop-beats-alert-loading" class="alert alert-info alert-hide"><img src="../img/loading.GIF"/> Dropping requested beat...hold on a second.</div>
+					<div id="drop-beats-alert-loading" class="alert alert-info alert-hide"><img src="img/loading.gif"/> Dropping requested beat...hold on a second.</div>
 					
 					<!-- Success alert -->
 					<div id="drop-beats-alert-success" class="alert alert-success alert-hide">

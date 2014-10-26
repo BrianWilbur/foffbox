@@ -11,7 +11,7 @@ function getVideos()
 
 	//Grab the next <pageSize> videos, starting with <lastId>
 	$configMode = 'live';
-	$connectionData = require_once("server-config.php");
+	$connectionData = require_once("../server-config.php");
 	$connectionData = $connectionData[$configMode];
 	
 	$pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);

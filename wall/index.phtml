@@ -1,0 +1,33 @@
+<?php include('../../basedir.php'); ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="wall.js"></script>
+<script src="<?php echo(BASEDIR); ?>/js/global.js"></script>
+<script src="<?php echo(BASEDIR); ?>/js/google-analytics.js"></script>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="style.css">
+		<title>The Foffbox Wall</title>
+	</head>
+	<body style="background-color: #111 !important; background-image:none !important;">
+		
+		<?php include("../../navbar/navbar.phtml"); ?>
+
+		<!-- Header text -->
+		<h3 style="color:#DDD; text-align:center;">Enjoy. New beats drop on <strong>Saturday Nights</strong>.</h3><br>
+		
+		<!-- Loading indicator -->
+		<div id="loading" style="color:#DDD; text-align:center;">Loading beats...<br><img src="img/loading.gif"/><br><br><br></div>
+		
+		<!-- Wall -->
+		<div id="wall" style="color:#DDD;">
+			<div id="nothing-here" style="text-align:center;">Nothing here yet. Check back Sunday morning.</div>
+		</div>
+
+	</body>
+</html>
+
+<script> $('#navbar-foffbox').addClass('active'); </script>
