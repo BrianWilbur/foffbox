@@ -196,11 +196,21 @@ function requestNewSong(requestId)
 				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
 				var commentTop = $('#comment-thread-wrapper').offset().top;
 				var finalHeight = leftSideBottom - commentTop - 15;
+				
+				//If the comment is too long, just make the comment section the same as the current height of the entire comment area
+				var commentAreaHeight = $('#comment-area').height();
+				if (finalHeight < commentAreaHeight)
+				{
+					finalHeight = commentAreaHeight;
+				}
+				
 				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
 				
 				//Render comments
 				renderComments(data['comments']);
 				
+				//If the div scrolls, add a little padding to make it look nicer; if not, reset the padding
+				//Hard-coded numbers, yuck
 				if ($('#comment-thread-wrapper').hasScrollBar())
 				{
 					$('#comment-thread-wrapper').css('padding-right', '5px');
@@ -243,7 +253,7 @@ function reportSongId(reportId)
 	$('#foffbox-player-report').attr('disabled', true);
 	$('#foffbox-player-report').tooltip('hide');
 
-	//Ping DB and ask for 10 videos
+	//Report it!
 	$.ajax({
 		type: 'POST',
 		url: 'report-song.php',
