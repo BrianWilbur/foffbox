@@ -82,13 +82,13 @@ if (empty($resultNextLowest))
 	$resultNextLowest = $maxId;
 }
 
-//Get the most recent 10 comments for the song
+//Get the most recent 20 comments for the song
 $sqlStatement = $pdo->prepare("
 	SELECT `message`, `dateSubmitted`
 	FROM `archive_comments`
 	WHERE `submissionArchiveId` = :requestId
 	ORDER BY `dateSubmitted` DESC
-	LIMIT 10;	
+	LIMIT 20;	
 ");
 $sqlStatement->bindValue(':requestId', $retrievedId, PDO::PARAM_INT); //Need the retrieved ID, NOT the initial request ID -- to account for missing videos
 $sqlStatement->execute();

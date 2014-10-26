@@ -3,9 +3,18 @@ var currentId = 0;
 var maxId = 0;
 var reported = false;
 
+//Turn on autoplay automatically on first play
+var playerStarted = false;
+
 //Play modes
 var shuffle = false;
 var autoplay = false;
+
+(function($) {
+    $.fn.hasScrollBar = function() {
+        return this.get(0).scrollHeight > this.height();
+    }
+})(jQuery);
 
 //Initialize a new Youtube player
 var player;
@@ -53,6 +62,15 @@ function onPlayerStateChange(event)
 	{
 		shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
 	}
+	else if (event.data === 1 && !playerStarted)
+	{
+		playerStarted = true;
+		
+		if (!autoplay)
+		{
+			$('#foffbox-player-autoplay').trigger('click');
+		}
+	}
 }
 
 /* Initializes page contents */
@@ -70,7 +88,7 @@ function initialize()
 function renderComments(comments)
 {
 	$('#comment-thread').html('');
-
+	
 	if (comments.length > 0)
 	{
 		for (var i = 0; i < comments.length; i++)
@@ -182,9 +200,39 @@ function requestNewSong(requestId)
 				//Set the URL's hash to include the requested ID (linking to & bookmarking beats! Sweet!)
 				document.location.hash = currentId;
 				
+				//Reset height of comment area
+				$('#comment-field').css('height', '64px');
+				
+				//Adjust height of comment box to match that of video before rendering comments (unless the quote is too big)
+				var quoteBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
+				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
+				var commentTop = $('#comment-thread-wrapper').offset().top;
+				var finalHeight = leftSideBottom - commentTop - 15;
+				
+				//If the comment is too long, just make the comment section the same as the current height of the entire comment area
+				var commentFormHeight = $('#comment-group').height();
+				if (finalHeight < commentFormHeight)
+				{
+					finalHeight = commentFormHeight;
+				}
+				
+				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
+				
 				//Render comments
 				renderComments(data['comments']);
 				
+				//If the div scrolls, add a little padding to make it look nicer; if not, reset the padding
+				//Hard-coded numbers, yuck
+				if ($('#comment-thread-wrapper').hasScrollBar())
+				{
+					$('#comment-thread-wrapper').css('padding-right', '5px');
+				}
+				else
+				{
+					$('#comment-thread-wrapper').css('padding-right', '0');
+				}
+				
+				//Adjust request slider
 				$('#request-slider').attr('max', maxId);
 				$('#request-slider').val(currentId);
 				$('#request-slider-val').html('#' + currentId);
@@ -217,7 +265,7 @@ function reportSongId(reportId)
 	$('#foffbox-player-report').attr('disabled', true);
 	$('#foffbox-player-report').tooltip('hide');
 
-	//Ping DB and ask for 10 videos
+	//Report it!
 	$.ajax({
 		type: 'POST',
 		url: 'report-song.php',
