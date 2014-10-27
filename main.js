@@ -66,6 +66,13 @@ function initialize()
 	//Position the introductory section correctly
 	var navbarBottom = $('.navbar-collapse').offset().top + $('.navbar-collapse').height();
 	$('#site-intro-wrapper').css('top', navbarBottom + 'px');
+	
+	$('#site-intro-drop').on('click', function(event){
+		$('#container-intro').toggle();
+		$('#site-intro-drop').toggle();
+		$('#drop-beat').toggle();
+		$('#container-drop').toggle();
+	});
 }
 
 /*
