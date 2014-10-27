@@ -24,6 +24,14 @@ function onYouTubeIframeAPIReady() {
 		width: '600',
 		mediaContentUrl: '',
 		videoId: '',
+		playerVars: {
+			color: 'red',
+			iv_load_policy: 3,
+			modestbranding: 1,
+			origin: "https://www.foffytrack.com",
+			rel: 0,
+			showinfo: 0,
+		},
 		events: {
 			'onReady': onPlayerReady,
 			'onStateChange': onPlayerStateChange
@@ -168,7 +176,7 @@ function requestNewSong(requestId)
 				var songUrl = data['submissionUrl'];
 				var newUrl = songUrl.replace("watch?v=", "embed/");
 				newUrl += "?";
-				newUrl += "wmode=opaque&controls=2&autohide=1&modestbranding=1&iv_load_policy=3&fs=0&loop=0&origin=https://www.foffytrack.com";
+				newUrl += "wmode=opaque";
 				
 				//If Autoplay is turned on, load the video right in and go for it. Otherwise just cue up a new one.
 				if (autoplay) player.loadVideoByUrl({mediaContentUrl:newUrl});
