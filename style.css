@@ -24,12 +24,17 @@ html
 /* Site introduction */
 #site-intro
 {
-	background-color: #EDEDED;
+	background-color: rgba(237, 237, 237, 0.80);
 	height: 100%;
 	left: 0;
 	position: absolute;
 	top: 0;
 	width: 100%;
+	z-index: 1;
+}
+#site-intro .jumbotron
+{
+	background-color: transparent !important;
 }
 #site-intro-wrapper
 {
@@ -43,10 +48,6 @@ html
 {
 	font-size: 20px;
 	padding-bottom: 20px;
-}
-#site-intro .jumbotron
-{
-	background-color: #EDEDED !important;
 }
 
 /* Hacky stuff */

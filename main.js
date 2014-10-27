@@ -66,10 +66,6 @@ function initialize()
 	//Position the introductory section correctly
 	var navbarBottom = $('.navbar-collapse').offset().top + $('.navbar-collapse').height();
 	$('#site-intro-wrapper').css('top', navbarBottom + 'px');
-	
-	$('#site-intro-close').on('click', function(event){
-		$('#site-intro').hide();
-	});
 }
 
 /*
