@@ -62,6 +62,10 @@ function initialize()
 	//Change up the background video
 	var randomVideo = Math.floor(Math.random()*(3-1+1)+1);
 	$('#bg-video').first('source').attr('src', 'data/vid/video' + randomVideo + '.mp4');
+	
+	//Position the introductory section correctly
+	var navbarBottom = $('.navbar-collapse').offset().top + $('.navbar-collapse').height();
+	$('#site-intro-wrapper').css('top', navbarBottom + 'px');
 }
 
 /*

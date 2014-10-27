@@ -51,73 +51,90 @@ Go home. You are drunk.
 		<video id="bg-video" muted autoplay loop>
 			<source src="data/vid/video1.mp4" type="video/mp4">
 		</video>
+	</body>
+</html>
 
-		<div class="row" style="margin:0 !important;">
-			<div class="col-md-10 col-md-offset-1">
-
-				<div class="row">
-					<div class="col-md-6 col-md-offset-3">
-						<div class="jumbotron">
-							<div class="row">
-								<div class="col-md-12">
-									<h1>The Foffbox</h1>
-									<p id="slogan">Drop beats in. Get beats out.</p>
-								</div>
-							</div>
-
-							<hr/><br>
-
-							<!-- Form -->
-							<form id="foffbox-form">
-								<div id="foffbox-form-group" class="form-group">
-									<div class="row">
-										<div class="col-md-12">
-
-											<!-- Youtube URL -->
-											<label for="youtube-link">Drop beats to send to the world:</strong></label> <span id="suggestion" class="pull-right field-subtext" data-toggle="tooltip" title="Hello world!">Need a suggestion? <span class="glyphicon glyphicon-question-sign"></span></span>
-											<input id="youtube-link" type="text" class="form-control" name="youtubeUrl" placeholder="e.g. youtube.com/watch?v=ZZ5LpwO-An4" maxlength="64" pattern="((https:\/\/)|(http:\/\/))?((m.)|(www.))?(youtube.com\/watch\?v=)([a-zA-Z0-9\-\_]){9,12}" required /><br>
-
-											<!-- Message -->
-											<label for="message">Include a message:</label> <span id="message-remaining" class="pull-right field-subtext">500 remaining</span>
-											<textarea id="message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
-
-											<!-- Email address
-											<label for="email">Wanna hear when new beats drop? Enter your e-mail (Optional):</label>
-											<input id="email" type="email" class="form-control" name="email" placeholder="e.g. foffythefoff@gmail.com" maxlength="64" required/><br> -->
-
-											<!-- Loading alert -->
-											<div id="alert-loading" class="alert alert-info alert-hide"><img src="data/img/loading.gif"/> Dropping requested beat...hold on a second.</div>
-
-											<!-- Success alert -->
-											<div id="alert-success" class="alert alert-success alert-hide">
-												<span id="success-message"></span> Soon we'll all get to hear those delicious tunes.<br><br>
-												Feel free to get right on it and send us another.
-											</div>
-
-											<!-- Failure alert -->
-											<div id="alert-failure" class="alert alert-danger alert-hide">Something went wrong, but we're not sure what. Try again later...we'll have it fixed by then. Promise.</div>
-
-											<button id="drop-beat" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-log-in"></span>&nbsp; Drop that beat!</button><br>
-											
-											<hr/>
-											
-											<!-- Radio/wall buttons -->
-											<strong>Listen to beats others have dropped:</strong><br><br>
-											<div class="btn-group btn-group-justified">
-												<a class="btn btn-info" href="player/"><span class="glyphicon glyphicon-headphones"></span>&nbsp; All beats</a>
-												<a class="btn btn-info" href="wall/"><span class="glyphicon glyphicon-headphones"></span>&nbsp; Weekly beats</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</form>
-						</div><br>
-
+<div id="site-intro">
+	<div id="site-intro-wrapper">
+		<div class="row row-padding-fix">
+			<div class="col-md-8 col-md-offset-2">
+				<div class="jumbotron">
+					<h1>Get ready to drop beats.</h1>
+					<h2>The Foffbox is a collaborative music player: By you, for you.</h2>
+					
+					<div class="row row-padding-fix">
+						<div class="col-md-6 col-md-offset-3 well" style="background-color: #D3D3D3 !important;">
+							<ul>
+								<li><h3><span class="glyphicon glyphicon-music"></span> Get <strong>music</strong> from Youtube.</h3></li>
+								<li><h3><span class="glyphicon glyphicon-comment"></span> Enter a <strong>message</strong>.</h3></li>
+								<li><h3><strong><span class="glyphicon glyphicon-fire"></span> Drop that beat.</strong></h3></li>
+								<li><h3><span class="glyphicon glyphicon-user"></span> Listen to what <strong>others</strong> have dropped.</h3></li>
+							</ul>
+							
+							<a id="site-intro-close" class="btn btn-lg btn-block btn-success" data-toggle="modal" data-target="#modal-drop-beats"><strong><span class="glyphicon glyphicon-check"></span> Start dropping beats!</strong></a>
+							<a id="site-intro-radio" class="btn btn-lg btn-block btn-info" href="player"><span class="glyphicon glyphicon-headphones"></span> Let me hear the music!</a>
+						</div>
 					</div>
+					
+					
 				</div>
 			</div>
 		</div>
-	</body>
-</html>
+	</div>
+</div>
+
+<div id="modal-drop-beats" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="jumbotron">
+					<div class="row">
+						<div class="col-md-12">
+							<h1>The Foffbox</h1>
+							<p id="slogan">Drop beats in. Get beats out.</p>
+						</div>
+					</div><br>
+
+					<!-- Form -->
+					<form id="foffbox-form">
+						<div id="foffbox-form-group" class="form-group">
+							<div class="row">
+								<div class="col-md-12">
+
+									<!-- Youtube URL -->
+									<label for="youtube-link">Drop your Youtube URL:</strong></label> <span id="suggestion" class="pull-right field-subtext" data-toggle="tooltip" title="Hello world!">Need a suggestion? <span class="glyphicon glyphicon-question-sign"></span></span>
+									<input id="youtube-link" type="text" class="form-control" name="youtubeUrl" placeholder="e.g. youtube.com/watch?v=ZZ5LpwO-An4" maxlength="64" pattern="((https:\/\/)|(http:\/\/))?((m.)|(www.))?(youtube.com\/watch\?v=)([a-zA-Z0-9\-\_]){9,12}" required /><br>
+
+									<!-- Message -->
+									<label for="message">Include a message:</label> <span id="message-remaining" class="pull-right field-subtext">500 remaining</span>
+									<textarea id="message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
+
+									<!-- Email address
+									<label for="email">Wanna hear when new beats drop? Enter your e-mail (Optional):</label>
+									<input id="email" type="email" class="form-control" name="email" placeholder="e.g. foffythefoff@gmail.com" maxlength="64" required/><br> -->
+
+									<!-- Loading alert -->
+									<div id="alert-loading" class="alert alert-info alert-hide"><img src="data/img/loading.gif"/> Dropping requested beat...hold on a second.</div>
+
+									<!-- Success alert -->
+									<div id="alert-success" class="alert alert-success alert-hide">
+										<span id="success-message"></span> Soon we'll all get to hear those delicious tunes.<br><br>
+										Feel free to get right on it and send us another.
+									</div>
+
+									<!-- Failure alert -->
+									<div id="alert-failure" class="alert alert-danger alert-hide">Something went wrong, but we're not sure what. Try again later...we'll have it fixed by then. Promise.</div>
+
+									<!-- Drop that beat! -->
+									<button id="drop-beat" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-fire"></span>&nbsp; Drop that beat!</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script> $('#navbar-foffbox').addClass('active'); </script>
