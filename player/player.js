@@ -4,7 +4,7 @@ var maxId = 0;
 var reported = false;
 
 //Turn on autoplay automatically on first play
-var playerStarted = false;
+var playerStopped = true;
 
 //Play modes
 var shuffle = false;
@@ -72,16 +72,19 @@ function onPlayerStateChange(event)
 		shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
 	}
 	
-	//'Til I decide if this functionality should be kept
-	/*else if (event.data === 1 && !playerStarted)
+	//Video is playing
+	else if (event.data === 1)
 	{
-		playerStarted = true;
-		
-		if (!autoplay)
-		{
-			$('#foffbox-player-autoplay').trigger('click');
-		}
-	}*/
+		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-pause"></span>');
+		playerStopped = false;
+	}
+	
+	//Video is paused
+	else if (event.data === 2)
+	{
+		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-play"></span>');
+		playerStopped = true;
+	}
 }
 
 /* Initializes page contents */
@@ -401,6 +404,11 @@ $(document).on('input', '#request-slider', function(event){
 	var tooltipText = 'Jump to Beat #' + sliderValue;
 	$('#request-slider').attr('title', tooltipText);
 	$('#request-slider').tooltip('fixTitle').tooltip('show');
+});
+
+/* Play/pause the video on button click */
+$(document).on('click', '#foffbox-player-play-pause', function(event){
+	playerStopped ? player.playVideo() : player.pauseVideo();
 });
 
 /* Request beat based on value of slider */
