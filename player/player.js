@@ -62,7 +62,9 @@ function onPlayerStateChange(event)
 	{
 		shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
 	}
-	else if (event.data === 1 && !playerStarted)
+	
+	//'Til I decide if this functionality should be kept
+	/*else if (event.data === 1 && !playerStarted)
 	{
 		playerStarted = true;
 		
@@ -70,7 +72,7 @@ function onPlayerStateChange(event)
 		{
 			$('#foffbox-player-autoplay').trigger('click');
 		}
-	}
+	}*/
 }
 
 /* Initializes page contents */
