@@ -25,9 +25,10 @@ function onYouTubeIframeAPIReady() {
 		mediaContentUrl: '',
 		videoId: '',
 		playerVars: {
-			color: 'red',
+			color: 'white',
+			controls: 0,
 			iv_load_policy: 3,
-			modestbranding: 1,
+			modestbranding: 0,
 			origin: "https://www.foffytrack.com",
 			rel: 0,
 			showinfo: 0,
