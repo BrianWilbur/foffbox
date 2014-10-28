@@ -243,7 +243,7 @@ function initializeNumSubmissions()
 		{
 			if (data['success'])
 			{
-				$('#submission-number').html(data['numSubmissions'] + '+');
+				$('#submission-number').html(data['numSubmissions']);
 			}
 		},
 		error: function()

@@ -93,14 +93,34 @@ function onPlayerStateChange(event)
 /* Gets the title of the current video by ID and appends it to the appropriate element. */
 function getSongTitle(vidId)
 {
-	$.get('http://gdata.youtube.com/feeds/api/videos/' + vidId + '?v=2&alt=json', function(data) {
-		var apiResults = data.entry;
-		console.log(apiResults);
+	$.get('http://gdata.youtube.com/feeds/api/videos/' + vidId + '?v=2&alt=jsonc', function(data) {
+		var aspectRatio = data.data.aspectRatio;
+		vidTitle = data.data.title;
 		
-		.title.$t;
-
 		//Some minor title formatting (since Youtube titles are weird)
 		vidTitle = vidTitle.replace('  ', ' ');
+		
+		console.log(aspectRatio);
+		
+		if (aspectRatio == "widescreen")
+		{
+			//Not-widescreen stuff
+			var proposedHeight = $('#foffbox-player-video').width() * 0.5625;
+			var oldHeight = $('#foffbox-player-video').height();
+			var newHeight = $('#foffbox-player-video').height(proposedHeight);
+			
+			var heightDiff = Math.abs(newHeight - oldHeight);
+			var currentTop = $('#foffbox-player-video').top();
+			var topDiff = currentTop - heightDiff;
+			
+			$('#foffbox-player-video').css('top', topDiff + 'px');
+		}
+		else
+		{
+			//Do widescreen stuff
+			var proposedWidth = $('#foffbox-player-video').width() * 0.75;
+			$('#foffbox-player-video').height(proposedWidth + 'px');
+		}
 	});
 }
 
