@@ -4,6 +4,7 @@ var suggestionMousedOver = false;
 //On ready, initialize
 $(document).ready(function(){
 	initialize();
+	initializeNumSubmissions();
 });
  
 /*
@@ -225,6 +226,29 @@ function getSongSuggestion()
 		error: function()
 		{
 			$('#suggestion').attr('title', "Ask again later.<br><br>(Something went wrong.)").tooltip('fixTitle').tooltip('show');
+		}
+	});
+}
+
+/*
+ * Initializes the number of Submissions that currently exist in the archive.
+ */
+function initializeNumSubmissions()
+{
+	$.ajax({
+		type: 'GET',
+		url: 'get-num-submissions.php',
+		dataType: 'json',
+		success: function(data)
+		{
+			if (data['success'])
+			{
+				$('#submission-number').html(data['numSubmissions'] + '+');
+			}
+		},
+		error: function()
+		{
+			//Just fail gracefully
 		}
 	});
 }

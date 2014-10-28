@@ -2,6 +2,8 @@ var previousId = 0;
 var currentId = 0;
 var maxId = 0;
 var reported = false;
+var vidTitle = '';
+var aspectRatio = '';
 
 //Turn on autoplay automatically on first play
 var playerStopped = true;
@@ -25,6 +27,7 @@ function onYouTubeIframeAPIReady() {
 		mediaContentUrl: '',
 		videoId: '',
 		playerVars: {
+			autoplay: 0,
 			color: 'white',
 			controls: 0,
 			iv_load_policy: 3,
@@ -80,11 +83,25 @@ function onPlayerStateChange(event)
 	}
 	
 	//Video is paused
-	else if (event.data === 2)
+	else if (event.data === 2 || event.data === 5)
 	{
 		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-play"></span>');
 		playerStopped = true;
 	}
+}
+
+/* Gets the title of the current video by ID and appends it to the appropriate element. */
+function getSongTitle(vidId)
+{
+	$.get('http://gdata.youtube.com/feeds/api/videos/' + vidId + '?v=2&alt=json', function(data) {
+		var apiResults = data.entry;
+		console.log(apiResults);
+		
+		.title.$t;
+
+		//Some minor title formatting (since Youtube titles are weird)
+		vidTitle = vidTitle.replace('  ', ' ');
+	});
 }
 
 /* Initializes page contents */
@@ -179,6 +196,10 @@ function requestNewSong(requestId)
 				//Load up the appropriate video
 				var songUrl = data['submissionUrl'];
 				var newUrl = songUrl.replace("watch?v=", "embed/");
+				
+				var vidId = newUrl.split('embed/')[1];
+				getSongTitle(vidId);
+				
 				newUrl += "?";
 				newUrl += "wmode=opaque";
 				
@@ -194,13 +215,13 @@ function requestNewSong(requestId)
 				var songId = data['submissionId'];
 				var songDate = data['submissionDate'];
 				$('#foffbox-player-quote footer').html("#" + songId + ", Dropped on " + songDate);
-				
+
 				//Some last-minute cleanup, then show the goods!
 				$('#loading').hide();
-				
+
 				$('#foffbox-player').css('opacity', '1.0');
-				$('#foffbox-player-video').height($('#foffbox-player-video').width() * 0.75);
-				
+				//$('#foffbox-player-video').height($('#foffbox-player-video').width() * 0.75);
+
 				//Set some IDs for convenience's sake
 				currentId = data['submissionId'];
 				previousId = data['previousId'];

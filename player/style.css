@@ -59,9 +59,14 @@
 }
 #foffbox-player-video
 {
-	border: 1px solid #333;
-	border-radius: 4px;
-	width: 100%;
+    position: fixed;
+    top:0;
+	bottom:0;
+    left:0;
+	right:0;
+	object-fit: cover;
+	min-width: 100%;
+	min-height: 100%;
 }
 #foffbox-player-toolbar
 {
