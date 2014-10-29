@@ -153,12 +153,12 @@ html
 {
 	margin-right: 8px;
 }
-#youtube-link-error, #message-error, #email-error
+#drop-beats-url-error, #message-error, #email-error
 {
 	color: #DB5353;
 	margin-top:3px;
 }
-#youtube-link-error, #email-error, #message-error
+#drop-beats-url-error, #email-error, #message-error
 {
 	margin-bottom:15px;
 }

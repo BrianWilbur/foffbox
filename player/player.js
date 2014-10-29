@@ -102,10 +102,14 @@ function getSongTitle(vidId)
 		
 		console.log(aspectRatio);
 		
+		//Reset height and width
+		$('#foffbox-player-video').css('height', '100%');
+		$('#foffbox-player-video').css('width', '100%');
+		
 		if (aspectRatio == "widescreen")
 		{
-			//Not-widescreen stuff
-			var proposedHeight = $('#foffbox-player-video').width() * 0.5625;
+			//Do widescreen stuff
+			/*var proposedHeight = $('#foffbox-player-video').width() * 0.5625;
 			var oldHeight = $('#foffbox-player-video').height();
 			var newHeight = $('#foffbox-player-video').height(proposedHeight);
 			
@@ -113,13 +117,14 @@ function getSongTitle(vidId)
 			var currentTop = $('#foffbox-player-video').top();
 			var topDiff = currentTop - heightDiff;
 			
-			$('#foffbox-player-video').css('top', topDiff + 'px');
+			$('#foffbox-player-video').css('top', topDiff + 'px');*/
 		}
 		else
 		{
-			//Do widescreen stuff
-			var proposedWidth = $('#foffbox-player-video').width() * 0.75;
-			$('#foffbox-player-video').height(proposedWidth + 'px');
+			//Do not-widescreen stuff
+			var height = $('#foffbox-player-video').height();
+			var width = height * 1.25;
+			$('#foffbox-player-video').css('width', width + 'px');
 		}
 	});
 }
@@ -181,7 +186,7 @@ function requestNewSong(requestId)
 
 	//Set dat Foffbox player up again
 	$('#loading').show();
-	$('#foffbox-player').css('opacity', '0.0');
+	$('#foffbox-player-video').css('opacity', '0.0');
 	
 	//Clear out commend field & comments
 	$('#comment-field').val('');
@@ -192,7 +197,7 @@ function requestNewSong(requestId)
 	$('#foffbox-player-report span').removeClass('glyphicon-ok');
 	$('#foffbox-player-report span').removeClass('foffbox-player-button-active');
 	$('#foffbox-player-report').tooltip({
-		placement: 'bottom',
+		placement: 'top',
 		container: 'body'
 	});
 	
@@ -208,7 +213,7 @@ function requestNewSong(requestId)
 		success: function(data)
 		{
 			$('#request-slider').attr('disabled', false);
-			$('#request-slider').attr('title', "Drag me. Jump beats. Have fun.");
+			$('#request-slider').attr('title', "Slide to jump to another song.");
 			$('#request-slider').tooltip('fixTitle').tooltip('hide');
 		
 			if (data['success'])
@@ -239,7 +244,7 @@ function requestNewSong(requestId)
 				//Some last-minute cleanup, then show the goods!
 				$('#loading').hide();
 
-				$('#foffbox-player').css('opacity', '1.0');
+				$('#foffbox-player-video').css('opacity', '1.0');
 				//$('#foffbox-player-video').height($('#foffbox-player-video').width() * 0.75);
 
 				//Set some IDs for convenience's sake
@@ -292,6 +297,8 @@ function requestNewSong(requestId)
 				$('#request-slider').val(currentId);
 				$('#request-slider-val').html('#' + currentId);
 				$('#comment-field').focus();
+				
+				//player.setPlaybackQuality('hd1080');
 			}
 			else
 			{
@@ -448,7 +455,7 @@ $(document).on('input', '#request-slider', function(event){
 });
 
 /* Play/pause the video on button click */
-$(document).on('click', '#foffbox-player-play-pause', function(event){
+$(document).on('click', '#foffbox-player-play-pause, #foffbox-player-video-cover', function(event){
 	playerStopped ? player.playVideo() : player.pauseVideo();
 });
 
@@ -472,11 +479,11 @@ $(document).on('ready', function(){
 	// Initialize control tooltips
 	$('.foffbox-player-button').tooltip({
 		container: 'body',
-		placement: 'bottom'
+		placement: 'top'
 	});
 	$('#request-slider').tooltip({
 		animation: false,
 		container: 'body',
-		placement: 'right'
+		placement: 'top'
 	});
 });

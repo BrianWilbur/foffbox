@@ -17,52 +17,24 @@
 	</head>
 	<body style="background-color: #111 !important; background-image:none !important;">
 	
+		<?php //include("../../navbar/navbar.phtml"); ?>
+		
 		<div id="foffbox-player-video"></div>
-		
-		<?php include("../../navbar/navbar.phtml"); ?>
-		
-		<!-- Slider Bar (to select a song) -->
-		<div class="row row-padding-fix">
-			<div class="col-md-2 col-md-offset-5 center-col">
-				<input id="request-slider" type="range" min="1" max="218" value="1" data-toggle="tooltip" title="Drag me. Jump beats. Have fun." data-toggle-position="right" />
-			</div>
-		</div><br>
-		
-		<!-- Toolbar -->
-		<div class="row row-padding-fix">
-			<div class="col-md-4 col-md-offset-4 center-col">
-				<!-- Player buttons -->
-				<div class="btn-group" role="toolbar">
-					<a id="foffbox-player-first" class="btn btn-default foffbox-player-button" title="Back to First Beat"><span class="glyphicon glyphicon-fast-backward"></span></a>
-					<a id="foffbox-player-prev" class="btn btn-default foffbox-player-button" title="Previous Beat"><span class="glyphicon glyphicon-backward"></span></a>
-					<a id="foffbox-player-autoplay" class="btn btn-default foffbox-player-button" title="Toggle Autoplay"><span class="glyphicon glyphicon-retweet"></span></a>
-					<a id="foffbox-player-shuffle" class="btn btn-default foffbox-player-button" title="Toggle Shuffle"><span class="glyphicon glyphicon-random"></span></a>
-					<a id="foffbox-player-play-pause" class="btn btn-default foffbox-player-button" title="Play"><span class="glyphicon glyphicon-play"></span></a>
-					<a id="foffbox-player-next" class="btn btn-default foffbox-player-button" title="Next Beat"><span class="glyphicon glyphicon-forward"></span></a>
-					<a id="foffbox-player-last" class="btn btn-default foffbox-player-button" title="Last Submitted Beat"><span class="glyphicon glyphicon-fast-forward"></span></a>
-				</div>
-				
-				<!-- Extra functions -->
-				<div class="btn-group" role="toolbar">
-					<a id="foffbox-player-report" class="btn btn-default foffbox-player-button" title="Report Non-beat"><span class="glyphicon glyphicon-flag"></span></a>
-					<a id="foffbox-player-drop" class="btn btn-default foffbox-player-button" title="Add your own beats to the radio!" data-toggle="modal" data-target="#drop-beats-modal"><span class="glyphicon glyphicon-cloud-upload"></span></a>
-				</div>
-			</div>
-		</div><br>
-		
+		<div id="foffbox-player-video-cover"></div>
+
 		<div id="loading" style="color:#DDD; text-align:center;">
 			Serving up some more beats, sit tight...<br>
 			<img src="img/loading.gif"/><br><br><br>
 		</div>
-		
+
 		<div id="foffbox-player">
 			<div class="row row-padding-fix">
 				<div id="foffbox-player-left" class="col-md-5 col-md-offset-1">
-					
+
 				</div>
-				
+
 				<div id="foffbox-player-right" class="col-md-5">
-				
+
 					<!-- Message & details -->
 					<blockquote id="foffbox-player-quote" style="margin-left: -15px;">
 						<p>
@@ -72,7 +44,7 @@
 						</p>
 						<footer>The Foff</footer>
 					</blockquote>
-					
+
 					<!-- Comment section -->
 					<div class="row">
 						<div id="comment-area">
@@ -84,11 +56,11 @@
 									<span class="glyphicon glyphicon-comment"></span> Drop that comment!
 								</a>
 							</div>
-							
+
 							<div id="comment-error" class="alert alert-danger"></div>
-							
+
 							<br>
-							
+
 							<!-- Comment thread -->
 							<div id="comment-thread-wrapper">
 								<h4>Recent comments</h4>
@@ -99,8 +71,33 @@
 				</div>
 			</div>
 		</div>
+		
+		<nav id="foffbox-toolbar" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+		
+			<!-- Beat selector -->
+			<div id="request-slider-container">
+				<a id="foffbox-player-back" class="btn btn-default foffbox-player-button" href="../" title="Back to Home"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>
+				<input id="request-slider" class="pull-right" type="range" min="1" max="1" value="1" data-toggle="tooltip" title="Slide to jump to another song." style="position:relative; left:40%; top:-50%;"/>
+			</div>
+		
+			<!-- Player buttons -->
+			<div class="btn-group" role="toolbar">
+				<a id="foffbox-player-first" class="btn btn-default foffbox-player-button" title="Back to First Beat"><span class="glyphicon glyphicon-fast-backward"></span></a>
+				<a id="foffbox-player-prev" class="btn btn-default foffbox-player-button" title="Previous Beat"><span class="glyphicon glyphicon-backward"></span></a>
+				<a id="foffbox-player-play-pause" class="btn btn-default foffbox-player-button" title="Play"><span class="glyphicon glyphicon-play"></span></a>
+				<a id="foffbox-player-next" class="btn btn-default foffbox-player-button" title="Next Beat"><span class="glyphicon glyphicon-forward"></span></a>
+				<a id="foffbox-player-last" class="btn btn-default foffbox-player-button" title="Last Submitted Beat"><span class="glyphicon glyphicon-fast-forward"></span></a>
+			</div>
+
+			<!-- Extra functions -->
+			<div class="btn-group pull-right" role="toolbar" style="position:absolute; right: 0; top: 0; height: 100%;">
+				<a id="foffbox-player-autoplay" class="btn btn-default foffbox-player-button" title="Toggle Autoplay"><span class="glyphicon glyphicon-retweet"></span></a>
+				<a id="foffbox-player-shuffle" class="btn btn-default foffbox-player-button" title="Toggle Shuffle"><span class="glyphicon glyphicon-random"></span></a>
+				<a id="foffbox-player-report" class="btn btn-default foffbox-player-button" title="Report Non-beat"><span class="glyphicon glyphicon-flag"></span></a>
+				<a id="foffbox-player-drop" class="btn btn-default foffbox-player-button" title="Add your own beats" data-toggle="modal" data-target="#drop-beats-modal"><span class="glyphicon glyphicon-cloud-upload"></span></a>
+			</div>
+		</nav>
 
 		<?php include("modal-drop-beats.phtml"); ?>
-		
 	</body>
 </html>

@@ -13,7 +13,7 @@ $(document).ready(function(){
 function initialize()
 {
 	//Focus first text box
-	$('#youtube-link').focus();
+	$('#drop-beats-url').focus();
 	
 	//Initialize "characters remaining"
 	$('#message').trigger('keypress');
@@ -147,7 +147,7 @@ function initializeDropBeats()
 		
 		if ($('#foffbox-form').valid())
 		{
-			url = $('#youtube-link').val();
+			url = $('#drop-beats-url').val();
 			message = $('#message').val();
 			signUp = true;
 			email = $('#email').val();
@@ -179,9 +179,9 @@ function initializeDropBeats()
 					{
 						var successMessage = data['message'];
 						//On success, clear out all the fields and re-focus the first text box so you can enter a new song right away
-						$('#youtube-link').val('');
+						$('#drop-beats-url').val('');
 						$('#message').val('');
-						$('#youtube-link').focus();
+						$('#drop-beats-url').focus();
 						$('#message').trigger('keypress');
 						$('#alert-success').show();
 						$('#success-message').html(successMessage);
