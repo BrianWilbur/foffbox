@@ -5,6 +5,11 @@ var reported = false;
 var vidTitle = '';
 var aspectRatio = '';
 
+var show_video = false;
+
+var quality = "medium";
+var popoverTextSet = false;
+
 //Turn on autoplay automatically on first play
 var playerStopped = true;
 
@@ -32,7 +37,6 @@ function onYouTubeIframeAPIReady() {
 			controls: 0,
 			iv_load_policy: 3,
 			modestbranding: 0,
-			origin: "https://www.foffytrack.com",
 			rel: 0,
 			showinfo: 0,
 		},
@@ -88,19 +92,22 @@ function onPlayerStateChange(event)
 		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-play"></span>');
 		playerStopped = true;
 	}
+	
+	else if (event.data === 3)
+	{
+		event.target.setPlaybackQuality(quality);
+	}
 }
 
 /* Gets the title of the current video by ID and appends it to the appropriate element. */
 function getSongTitle(vidId)
 {
-	$.get('http://gdata.youtube.com/feeds/api/videos/' + vidId + '?v=2&alt=jsonc', function(data) {
+	$.get('https://gdata.youtube.com/feeds/api/videos/' + vidId + '?v=2&alt=jsonc', function(data) {
 		var aspectRatio = data.data.aspectRatio;
 		vidTitle = data.data.title;
 		
 		//Some minor title formatting (since Youtube titles are weird)
 		vidTitle = vidTitle.replace('  ', ' ');
-		
-		console.log(aspectRatio);
 		
 		//Reset height and width
 		$('#foffbox-player-video').css('height', '100%');
@@ -472,7 +479,7 @@ $(document).on('ready', function(){
 	initialize();
 	
 	var tag = document.createElement('script');
-	tag.src = "//www.youtube.com/iframe_api";
+	tag.src = "https://www.youtube.com/iframe_api";
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	
@@ -485,5 +492,52 @@ $(document).on('ready', function(){
 		animation: false,
 		container: 'body',
 		placement: 'top'
+	});
+	
+	if (!popoverTextSet)
+	{
+		popoverContent = "\
+		<div id='quality-highres' class='popover-row'><span class='quality-bullet'></span> >1080p</div>\
+		<div id='quality-1080' class='popover-row'><span class='quality-bullet'></span> 1080p (HD)</div>\
+		<div id='quality-720' class='popover-row'><span class='quality-bullet'></span> 720p (HD)</div>\
+		<div id='quality-480' class='popover-row'><span class='quality-bullet'></span> 480p</div>\
+		<div id='quality-360' class='popover-row'><span class='quality-bullet'></span> 360p</div>\
+		<div id='quality-240' class='popover-row'><span class='quality-bullet'></span> 240p</div>";
+	
+		//Initialize Quality popover
+		$('#foffbox-player-quality').popover({
+			container: 'body',
+			content: popoverContent,
+			html: true,
+			placement: 'top',
+			title: 'Select Video Quality',
+			trigger: 'manual',
+		});
+		
+		popoverTextSet = true;
+	}
+	
+	//Toggle popovers on click
+	$('#foffbox-player-quality').on('click', function(event){
+		$('#foffbox-player-quality').popover('toggle');
+	});
+
+	$(document).on('click', '.popover-row', function(event)
+	{
+		switch ($(this).attr('id'))
+		{
+			case 'quality-highres': quality = "highres"; break;
+			case 'quality-1080': quality = "hd1080"; break;
+			case 'quality-720': quality = "hd720"; break;
+			case 'quality-480': quality = "large"; break;
+			case 'quality-360': quality = "medium"; break;
+			case 'quality-240': quality = "small"; break;
+			default: quality = "medium"; break;
+		}
+
+		$(this).find('.quality-bullet').html('hi');
+		
+		popoverContent = $(this).closest('.popover-content').html();
+		$('#foffbox-player-quality').popover('hide');
 	});
 });
