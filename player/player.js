@@ -84,6 +84,7 @@ function onPlayerStateChange(event)
 	{
 		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-pause"></span>');
 		playerStopped = false;
+		event.target.setPlaybackQuality(quality);
 	}
 	
 	//Video is paused
@@ -556,5 +557,16 @@ $(document).on('ready', function(){
 		animation: false,
 		container: 'body',
 		placement: 'top'
+	});
+	
+	/*  */
+	$('#foffbox-toolbar').on('mouseout', function(event){
+		$(this).stop();
+		$(this).fadeTo(2000, 0.25);
+	});
+	
+	$('#foffbox-toolbar').on('mouseover', function(event){
+		$(this).stop();
+		$(this).fadeTo(500, 1.0);
 	});
 });
