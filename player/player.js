@@ -177,7 +177,7 @@ function initializePopover()
 	
 	if (!volumePopoverTextSet)
 	{
-		volumePopoverContent = "<input id='volume-slider' type='range' min='0' max='100' step='1' value='50' style='width:100px !important;'/>";
+		volumePopoverContent = "<input id='volume-slider' type='range' min='0' max='100' step='1' value='50'/>";
 		
 		//Initialize Quality popover
 		$('#foffbox-player-volume').popover({
@@ -185,6 +185,7 @@ function initializePopover()
 			content: function() { return volumePopoverContent; },
 			html: true,
 			placement: 'top',
+			title: '',
 			trigger: 'focus',
 		});
 		

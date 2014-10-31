@@ -137,13 +137,13 @@ html
 	height: 100%;
 }
 
-input[type=range] {
+input[type=range]#request-slider {
     -webkit-appearance: none !important;
 	outline: none;
 	width: 192px;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
+input[type=range]#request-slider::-webkit-slider-runnable-track {
 	background-color: #333;
 	border: none;
 	height: 2px;
@@ -151,7 +151,7 @@ input[type=range]::-webkit-slider-runnable-track {
 	width: 192px;
 }
 
-input[type=range]::-webkit-slider-thumb {
+input[type=range]#request-slider::-webkit-slider-thumb {
 	-webkit-appearance:none !important;
 	background-color: #CCC;
 	border-radius: 50%;
@@ -163,7 +163,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* Mozilla slider */
-input[type="range"]::-moz-range-track {
+input[type="range"]#request-slider::-moz-range-track {
 	-moz-appearance:none !important;
 	background-color: #333;
 	border: none;
@@ -172,7 +172,7 @@ input[type="range"]::-moz-range-track {
 	width:192px;
 }
 
-input[type="range"]::-moz-range-thumb {
+input[type="range"]#request-slider::-moz-range-thumb {
 	-moz-appearance:none !important;
 	background-color: #CCC;
 	border: none;
@@ -261,6 +261,7 @@ input[type="range"]::-moz-range-thumb {
 {
 	background-color: #0D0D0D !important;
 	color: #CCC !important;
+	display: none !important;
 	text-align: center !important;
 }
 .popover-content
@@ -290,12 +291,11 @@ input[type="range"]::-moz-range-thumb {
 	display: none !important;
 }
 
-/* Popover Content -- Volume 
+/* Popover Content -- Volume */
 input[type=range]#volume-slider {
-	-webkit-appearance: none !important;
-	height: 2px;
+    -webkit-appearance: none !important;
 	outline: none;
-	width: 100px !important;
+	width: 100px;
 }
 
 input[type=range]#volume-slider::-webkit-slider-runnable-track {
@@ -303,7 +303,7 @@ input[type=range]#volume-slider::-webkit-slider-runnable-track {
 	border: none;
 	height: 2px;
 	outline: none;
-	width: 100px !important;
+	width: 100px;
 }
 
 input[type=range]#volume-slider::-webkit-slider-thumb {
@@ -313,12 +313,13 @@ input[type=range]#volume-slider::-webkit-slider-thumb {
 	cursor: pointer;
 	height: 12px;
 	outline: none;
+	margin-top: -5px;
 	width: 12px;
 }
 
-/* Mozilla slider
+/* Mozilla slider */
 input[type="range"]#volume-slider::-moz-range-track {
-	-moz-appearance: none !important;
+	-moz-appearance:none !important;
 	background-color: #333;
 	border: none;
 	height: 2px;
@@ -335,4 +336,4 @@ input[type="range"]#volume-slider::-moz-range-thumb {
 	height: 12px;
 	outline: none;
 	width: 12px;
-}*/
+}
