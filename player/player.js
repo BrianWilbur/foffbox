@@ -144,6 +144,67 @@ function initialize()
 	$('#comment-error').hide();
 }
 
+/* Initializes popover contents */
+function initializePopover()
+{
+	if (!popoverTextSet)
+	{
+		//Initialize popover content (it's pretty complicated, so we do it in JS instead of HTML)
+		popoverContent = "\
+		<div id='quality-highres' class='popover-row'> Over 1080p</div>\
+		<div id='quality-1080' class='popover-row'> 1080p (HD)</div>\
+		<div id='quality-720' class='popover-row'> 720p (HD)</div>\
+		<div id='quality-480' class='popover-row'> 480p</div>\
+		<div id='quality-360' class='popover-row popover-row-selected'> 360p</div>\
+		<div id='quality-240' class='popover-row'> 240p</div>";
+		
+		//Initialize Quality popover
+		$('#foffbox-player-quality').popover({
+			container: 'body',
+			content: function() { return popoverContent; },
+			html: true,
+			placement: 'top',
+			title: 'Select Video Quality',
+			trigger: 'manual',
+		});
+		
+		popoverTextSet = true;
+	}
+	
+	//Toggle popovers on click
+	$('#foffbox-player-quality').on('click', function(event){
+		$('#foffbox-player-quality').popover('toggle');
+	});
+
+	$(document).on('click', '.popover-row', function(event)
+	{
+		switch ($(this).attr('id'))
+		{
+			case 'quality-highres': quality = "highres"; break;
+			case 'quality-1080': quality = "hd1080"; break;
+			case 'quality-720': quality = "hd720"; break;
+			case 'quality-480': quality = "large"; break;
+			case 'quality-360': quality = "medium"; break;
+			case 'quality-240': quality = "small"; break;
+			default: quality = "medium"; break;
+		}
+		
+		//Remove selection from all existing child elements of this parent
+		var children = $(this).parent().children('.popover-row');
+		children.each(function(event){
+			console.log("Hi");
+			$(this).removeClass('popover-row-selected');
+		});
+		
+		//Select the element the user clicked, then update the content (otherwise it'll reinitialize every time the user brings up the popover)
+		$(this).addClass('popover-row-selected');
+		popoverContent = $(this).closest('.popover-content').html();
+		
+		//Finally, hide the popover
+		$('#foffbox-player-quality').popover('hide');
+	});
+}
+
 /*
  * Given an array with keys 'message' and 'dateSubmitted', this method
  * will render comment data inside the appropriate div.
@@ -477,13 +538,15 @@ $(document).on('mouseup', '#request-slider', function(event){
 /* Document ready */
 $(document).on('ready', function(){
 	initialize();
+	initializePopover();
 	
+	//Initialize the Youtube API Script
 	var tag = document.createElement('script');
 	tag.src = "https://www.youtube.com/iframe_api";
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	
-	// Initialize control tooltips
+	//Initialize tooltips for the controls @ the bottom of the screen
 	$('.foffbox-player-button').tooltip({
 		container: 'body',
 		placement: 'top'
@@ -492,52 +555,5 @@ $(document).on('ready', function(){
 		animation: false,
 		container: 'body',
 		placement: 'top'
-	});
-	
-	if (!popoverTextSet)
-	{
-		popoverContent = "\
-		<div id='quality-highres' class='popover-row'><span class='quality-bullet'></span> >1080p</div>\
-		<div id='quality-1080' class='popover-row'><span class='quality-bullet'></span> 1080p (HD)</div>\
-		<div id='quality-720' class='popover-row'><span class='quality-bullet'></span> 720p (HD)</div>\
-		<div id='quality-480' class='popover-row'><span class='quality-bullet'></span> 480p</div>\
-		<div id='quality-360' class='popover-row'><span class='quality-bullet'></span> 360p</div>\
-		<div id='quality-240' class='popover-row'><span class='quality-bullet'></span> 240p</div>";
-	
-		//Initialize Quality popover
-		$('#foffbox-player-quality').popover({
-			container: 'body',
-			content: popoverContent,
-			html: true,
-			placement: 'top',
-			title: 'Select Video Quality',
-			trigger: 'manual',
-		});
-		
-		popoverTextSet = true;
-	}
-	
-	//Toggle popovers on click
-	$('#foffbox-player-quality').on('click', function(event){
-		$('#foffbox-player-quality').popover('toggle');
-	});
-
-	$(document).on('click', '.popover-row', function(event)
-	{
-		switch ($(this).attr('id'))
-		{
-			case 'quality-highres': quality = "highres"; break;
-			case 'quality-1080': quality = "hd1080"; break;
-			case 'quality-720': quality = "hd720"; break;
-			case 'quality-480': quality = "large"; break;
-			case 'quality-360': quality = "medium"; break;
-			case 'quality-240': quality = "small"; break;
-			default: quality = "medium"; break;
-		}
-
-		$(this).find('.quality-bullet').html('hi');
-		
-		popoverContent = $(this).closest('.popover-content').html();
-		$('#foffbox-player-quality').popover('hide');
 	});
 });

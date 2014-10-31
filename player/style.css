@@ -255,7 +255,7 @@ input[type="range"]::-moz-range-thumb{
 {
 	background-color: #111 !important;
 	color: #DDD !important;
-	text-align: center;
+	
 }
 .popover-title
 {
@@ -275,6 +275,10 @@ input[type="range"]::-moz-range-thumb{
 	padding-left: 12px;
 	padding-right: 12px;
 	width: 100%;
+}
+.popover-row-selected
+{
+	color: #8DC3FC;
 }
 .popover-row:hover
 {
