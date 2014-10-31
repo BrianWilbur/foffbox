@@ -166,7 +166,7 @@ function initializePopover()
 			html: true,
 			placement: 'top',
 			title: 'Select Video Quality',
-			trigger: 'manual',
+			trigger: 'focus',
 		});
 		
 		popoverTextSet = true;
@@ -202,8 +202,12 @@ function initializePopover()
 		$(this).addClass('popover-row-selected');
 		popoverContent = $(this).closest('.popover-content').html();
 		
-		//Finally, hide the popover
+		//Finally, hide the popover (and start hiding the toolbar)
 		$('#foffbox-player-quality').popover('hide');
+	});
+	
+	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
+		$('#foffbox-toolbar').trigger('mouseout');
 	});
 }
 
@@ -367,8 +371,6 @@ function requestNewSong(requestId)
 				$('#request-slider').val(currentId);
 				$('#request-slider-val').html('#' + currentId);
 				$('#comment-field').focus();
-				
-				//player.setPlaybackQuality('hd1080');
 			}
 			else
 			{
@@ -559,10 +561,13 @@ $(document).on('ready', function(){
 		placement: 'top'
 	});
 	
-	/*  */
+	/* Fade toolbar in/out when mousing over/mousing out of it */
 	$('#foffbox-toolbar').on('mouseout', function(event){
-		$(this).stop();
-		$(this).fadeTo(2000, 0.25);
+		if ($('.popover-content').length <= 0)
+		{
+			$(this).stop();
+			$(this).fadeTo(1500, 0.20);
+		}
 	});
 	
 	$('#foffbox-toolbar').on('mouseover', function(event){
