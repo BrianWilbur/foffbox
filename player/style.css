@@ -137,21 +137,21 @@ html
 	height: 100%;
 }
 
-input[type=range]{
+input[type=range]#request-slider {
     -webkit-appearance: none !important;
 	outline: none;
 	width: 192px;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
+input[type=range]#request-slider::-webkit-slider-runnable-track {
 	background-color: #333;
 	border: none;
 	height: 2px;
 	outline: none;
-	width:192px;
+	width: 192px;
 }
 
-input[type=range]::-webkit-slider-thumb {
+input[type=range]#request-slider::-webkit-slider-thumb {
 	-webkit-appearance:none !important;
 	background-color: #CCC;
 	border-radius: 50%;
@@ -163,7 +163,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* Mozilla slider */
-input[type="range"]::-moz-range-track{
+input[type="range"]#request-slider::-moz-range-track {
 	-moz-appearance:none !important;
 	background-color: #333;
 	border: none;
@@ -172,7 +172,7 @@ input[type="range"]::-moz-range-track{
 	width:192px;
 }
 
-input[type="range"]::-moz-range-thumb{
+input[type="range"]#request-slider::-moz-range-thumb {
 	-moz-appearance:none !important;
 	background-color: #CCC;
 	border: none;
@@ -261,6 +261,7 @@ input[type="range"]::-moz-range-thumb{
 {
 	background-color: #0D0D0D !important;
 	color: #CCC !important;
+	text-align: center !important;
 }
 .popover-content
 {
@@ -287,4 +288,51 @@ input[type="range"]::-moz-range-thumb{
 .arrow
 {
 	display: none !important;
+}
+
+/* Popover Content -- Volume */
+input[type=range]#volume-slider {
+	-webkit-appearance: none !important;
+	height: 100%;
+	outline: none;
+	width: 100px !important;
+}
+
+input[type=range]#volume-slider::-webkit-slider-runnable-track {
+	background-color: #333;
+	border: none;
+	height: 100%;
+	outline: none;
+	width: 100px !important;
+}
+
+input[type=range]#volume-slider::-webkit-slider-thumb {
+	-webkit-appearance:none !important;
+	background-color: #CCC;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	width: 12px;
+}
+
+/* Mozilla slider */
+input[type="range"]#volume-slider::-moz-range-track {
+	-moz-appearance: none !important;
+	background-color: #333;
+	border: none;
+	height: 100%;
+	outline: none;
+	width: 100px;
+}
+
+input[type="range"]#volume-slider::-moz-range-thumb {
+	-moz-appearance:none !important;
+	background-color: #CCC;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	width: 12px;
 }

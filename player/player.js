@@ -8,7 +8,10 @@ var aspectRatio = '';
 var show_video = false;
 
 var quality = "medium";
-var popoverTextSet = false;
+var qualityPopoverTextSet = false;
+var volumePopoverTextSet = false;
+
+var volume = 50;
 
 //Turn on autoplay automatically on first play
 var playerStopped = true;
@@ -148,7 +151,7 @@ function initialize()
 /* Initializes popover contents */
 function initializePopover()
 {
-	if (!popoverTextSet)
+	if (!qualityPopoverTextSet)
 	{
 		//Initialize popover content (it's pretty complicated, so we do it in JS instead of HTML)
 		popoverContent = "\
@@ -169,13 +172,38 @@ function initializePopover()
 			trigger: 'focus',
 		});
 		
-		popoverTextSet = true;
+		qualityPopoverTextSet = true;
+	}
+	
+	if (!volumePopoverTextSet)
+	{
+		volumePopoverContent = "<input id='volume-slider' type='range' min='0' max='100' step='1' value='50'/>";
+		
+		//Initialize Quality popover
+		$('#foffbox-player-volume').popover({
+			container: 'body',
+			content: function() { return volumePopoverContent; },
+			html: true,
+			placement: 'top',
+			title: 'Volume',
+			trigger: 'focus',
+		});
+		
+		volumePopoverTextSet = true;
 	}
 	
 	//Toggle popovers on click
 	$('#foffbox-player-quality').on('click', function(event){
+		$('#foffbox-player-volume').popover('hide');
 		$('#foffbox-player-quality').popover('toggle');
 	});
+	
+		//Toggle popovers on click
+	$('#foffbox-player-volume').on('click', function(event){
+		$('#foffbox-player-volume').popover('toggle');
+		$('#foffbox-player-quality').popover('hide');
+	});
+
 
 	$(document).on('click', '.popover-row', function(event)
 	{
@@ -539,6 +567,14 @@ $(document).on('mouseup', '#request-slider', function(event){
 	requestNewSong(sliderValue);
 });
 
+/* Set volume based on value of other slider */
+$(document).on('mousemove', '#volume-slider', function(event){
+	volume = $(this).val();
+	$(this).attr('value', volume);
+	player.setVolume(volume);
+	volumePopoverContent = $(this).closest('.popover-content').html();
+});
+
 /* Document ready */
 $(document).on('ready', function(){
 	initialize();
@@ -566,7 +602,7 @@ $(document).on('ready', function(){
 		if ($('.popover-content').length <= 0)
 		{
 			$(this).stop();
-			$(this).fadeTo(1500, 0.20);
+			$(this).fadeTo(3000, 0.20);
 		}
 	});
 	
