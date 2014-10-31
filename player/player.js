@@ -177,7 +177,7 @@ function initializePopover()
 	
 	if (!volumePopoverTextSet)
 	{
-		volumePopoverContent = "<input id='volume-slider' type='range' min='0' max='100' step='1' value='50'/>";
+		volumePopoverContent = "<input id='volume-slider' type='range' min='0' max='100' step='1' value='50' style='width:100px !important;'/>";
 		
 		//Initialize Quality popover
 		$('#foffbox-player-volume').popover({
@@ -185,10 +185,10 @@ function initializePopover()
 			content: function() { return volumePopoverContent; },
 			html: true,
 			placement: 'top',
-			title: 'Volume',
 			trigger: 'focus',
 		});
 		
+		$('#foffbox-player-volume').find('.popover-content').css('padding', '10px');
 		volumePopoverTextSet = true;
 	}
 	

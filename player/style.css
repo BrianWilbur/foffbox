@@ -137,13 +137,13 @@ html
 	height: 100%;
 }
 
-input[type=range]#request-slider {
+input[type=range] {
     -webkit-appearance: none !important;
 	outline: none;
 	width: 192px;
 }
 
-input[type=range]#request-slider::-webkit-slider-runnable-track {
+input[type=range]::-webkit-slider-runnable-track {
 	background-color: #333;
 	border: none;
 	height: 2px;
@@ -151,7 +151,7 @@ input[type=range]#request-slider::-webkit-slider-runnable-track {
 	width: 192px;
 }
 
-input[type=range]#request-slider::-webkit-slider-thumb {
+input[type=range]::-webkit-slider-thumb {
 	-webkit-appearance:none !important;
 	background-color: #CCC;
 	border-radius: 50%;
@@ -163,7 +163,7 @@ input[type=range]#request-slider::-webkit-slider-thumb {
 }
 
 /* Mozilla slider */
-input[type="range"]#request-slider::-moz-range-track {
+input[type="range"]::-moz-range-track {
 	-moz-appearance:none !important;
 	background-color: #333;
 	border: none;
@@ -172,7 +172,7 @@ input[type="range"]#request-slider::-moz-range-track {
 	width:192px;
 }
 
-input[type="range"]#request-slider::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
 	-moz-appearance:none !important;
 	background-color: #CCC;
 	border: none;
@@ -290,10 +290,10 @@ input[type="range"]#request-slider::-moz-range-thumb {
 	display: none !important;
 }
 
-/* Popover Content -- Volume */
+/* Popover Content -- Volume 
 input[type=range]#volume-slider {
 	-webkit-appearance: none !important;
-	height: 100%;
+	height: 2px;
 	outline: none;
 	width: 100px !important;
 }
@@ -301,7 +301,7 @@ input[type=range]#volume-slider {
 input[type=range]#volume-slider::-webkit-slider-runnable-track {
 	background-color: #333;
 	border: none;
-	height: 100%;
+	height: 2px;
 	outline: none;
 	width: 100px !important;
 }
@@ -316,12 +316,12 @@ input[type=range]#volume-slider::-webkit-slider-thumb {
 	width: 12px;
 }
 
-/* Mozilla slider */
+/* Mozilla slider
 input[type="range"]#volume-slider::-moz-range-track {
 	-moz-appearance: none !important;
 	background-color: #333;
 	border: none;
-	height: 100%;
+	height: 2px;
 	outline: none;
 	width: 100px;
 }
@@ -335,4 +335,4 @@ input[type="range"]#volume-slider::-moz-range-thumb {
 	height: 12px;
 	outline: none;
 	width: 12px;
-}
+}*/
