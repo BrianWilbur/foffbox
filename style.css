@@ -26,9 +26,9 @@ html
 {
 	background-color: rgba(237, 237, 237, 0.80);
 	height: 100%;
-	left: 0;
-	position: absolute;
-	top: 0;
+	bottom: 0;
+	position: fixed;
+	right: 0;
 	width: 100%;
 	z-index: 1;
 }
@@ -38,11 +38,17 @@ html
 }
 #site-intro-wrapper
 {
+	background-color: transparent !important;;
 	position: relative;
+	z-index: 2;
 }
 #site-intro-wrapper h2
 {
 	padding-bottom: 64px;
+}
+.jumbotron
+{
+	background-color: transparent !important;
 }
 #site-intro-wrapper ul, #site-intro-wrapper li
 {
@@ -69,7 +75,6 @@ html
 /* Bootstrap overrides */
 .jumbotron
 {
-	background-color: rgba(200, 200, 200, 0.90) !important;
 	border-radius: 7px;
 	padding: 30px !important;
 	margin: 0px !important;
@@ -80,7 +85,7 @@ html
 }
 .jumbotron .well
 {
-	background-color: rgba(200, 200, 200, 0.90) !important;
+	
 }
 .well p
 {
@@ -88,7 +93,7 @@ html
 }
 #well-info
 {
-	background-color: rgba(200, 200, 200, 0.90) !important;
+	
 }
 
 .theme
