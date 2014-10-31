@@ -178,6 +178,8 @@ function initializePopover()
 
 	$(document).on('click', '.popover-row', function(event)
 	{
+		//Based on the selected quality, set the 'quality' string to a different value.
+		//The 'quality' string is used directly to set the quality of videos each time one is requested.
 		switch ($(this).attr('id'))
 		{
 			case 'quality-highres': quality = "highres"; break;
@@ -192,7 +194,6 @@ function initializePopover()
 		//Remove selection from all existing child elements of this parent
 		var children = $(this).parent().children('.popover-row');
 		children.each(function(event){
-			console.log("Hi");
 			$(this).removeClass('popover-row-selected');
 		});
 		

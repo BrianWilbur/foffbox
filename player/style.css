@@ -278,7 +278,7 @@ input[type="range"]::-moz-range-thumb{
 }
 .popover-row-selected
 {
-	color: #8DC3FC;
+	color: #8DC3FC !important;
 }
 .popover-row:hover
 {
