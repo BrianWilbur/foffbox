@@ -118,9 +118,79 @@ if (!empty($commentResults))
 	}
 }
 
+//Get user IP Address
+$ipAddress = $_SERVER['REMOTE_ADDR'];
+while (strlen($ipAddress) < 9)
+{
+	//Client IP
+	if (!empty($_SERVER['HTTP_CLIENT_IP']))
+	{
+		$ipAddress = $_SERVER['HTTP_CLIENT_IP'];
+	}
+
+	//Forward IP (proxies)
+	if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+	{
+		$ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	}
+
+	break;
+}
+
+//Get all Labels
+$sqlStatement = $pdo->prepare("SELECT `id`, `name` FROM `submissions_labels` WHERE `active` = 1");
+$sqlStatement->execute();
+$labelResults = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+
+if (!empty($ipAddress))
+{
+	//Get the label the user has selected
+	$sqlStatement = $pdo->prepare("
+		SELECT `submissionsLabelId`
+		FROM `submissions_archiveLabels`
+		WHERE `ipAddress` = :ipAddress
+		AND `submissionsArchiveId` = :requestId;
+	");
+	$sqlStatement->bindValue(':ipAddress', $ipAddress);
+	$sqlStatement->bindValue(':requestId', $result['id']);
+	$sqlStatement->execute();
+	$labelSelectedResults = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+	
+	if (!empty($labelSelectedResults))
+	{
+		$labelSelectedResults = $labelSelectedResults[0]['submissionsLabelId'];
+	}
+}
+
+$labelsFinal = array();
+if (!empty($labelResults))
+{
+	foreach ($labelResults as $labelResult)
+	{
+		$thisId = $labelResult['id'];
+		$thisName = $labelResult['name'];
+		$selectedId = $labelSelectedResults;
+		$selected = false;
+		if (!empty($selectedId))
+		{
+			if ($selectedId == $thisId)
+			{
+				$selected = true;
+			}
+		}
+		
+		$labelsFinal[] = array(
+			'id' => $thisId,
+			'name' => $thisName,
+			'selected' => $selected
+		);
+	}
+}
+
 echo(json_encode(
 	array(
 		'comments'			=> $comments,
+		'labels'			=> $labelsFinal,
 		'maxId'				=> intval($maxId),
 		'previousId'		=> intval($resultNextLowest),
 		'submissionDate' 	=> date('F jS, Y @ g:i A', strtotime($result['dateSubmitted'])),

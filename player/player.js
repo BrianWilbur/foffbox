@@ -262,6 +262,28 @@ function renderComments(comments)
 }
 
 /*
+ * Given an array with keys 'id', 'name' and 'selected', this method
+ * will render label data inside the appropriate div.
+ */
+function renderLabels(labels)
+{
+	$('#comment-labels').html('');
+	
+	if (labels.length > 0)
+	{
+		for (var i = 0; i < labels.length; i++)
+		{
+			var labelId = labels[i]['id'];
+			var labelName = labels[i]['name'];
+			var labelSelected = labels[i]['selected'];
+			var classString = labelSelected ? 'primary' : 'default';
+			
+			$('#comment-labels').append('<a class="comment-label label label-' + classString + '" labelId="' + labelId + '" style="display: inline-block !important;">' + labelName + '</a> ');
+		}
+	}
+}
+
+/*
  * Renders a single comment into the comment thread list.
  */
 function renderComment(commentNum, message, date)
@@ -317,6 +339,8 @@ function requestNewSong(requestId)
 		
 			if (data['success'])
 			{
+				console.log(data);
+			
 				//Load up the appropriate video
 				var songUrl = data['submissionUrl'];
 				var newUrl = songUrl.replace("watch?v=", "embed/");
@@ -365,6 +389,9 @@ function requestNewSong(requestId)
 				
 				//Render comments
 				renderComments(data['comments']);
+				
+				//Render labels
+				renderLabels(data['labels']);
 				
 				//If the div scrolls, add a little padding to make it look nicer; if not, reset the padding
 				//Hard-coded numbers, yuck
@@ -487,6 +514,36 @@ function dropComment()
 	
 	document.location.hash = currentId;
 }
+
+/* Let the user select different labels */
+$(document).on('click', '.comment-label', function(event){
+
+	//Shuffle some classes around
+	$('.comment-label').each(function(){
+		$(this).removeClass('label-primary');
+		$(this).addClass('label-default');
+	});
+	
+	$(this).removeClass('label-default');
+	$(this).addClass('label-primary');
+
+	//Associate label ID with Song ID
+	var labelId = $(this).attr('labelId');
+
+	$.ajax({
+		type: 'POST',
+		url: 'change-label.php',
+		dataType: 'json',
+		data:
+		{
+			songId:currentId,
+			labelId:labelId
+		},
+		success: function(data) { },
+		error: function(err){ }
+	});
+	
+});
 
 /* When the "First" button is clicked, go back to the first song */
 $(document).on('click', '#foffbox-player-first', function(event) {

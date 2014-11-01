@@ -119,6 +119,12 @@ html
 	font-style: italic;
 }
 
+/* Comment labels */
+.comment-label.label-default:hover
+{
+	background-color: #5bc0de !important;
+}
+
 /* Foffbox Player "Drop Beats" dialog */
 #drop-beats-message
 {
