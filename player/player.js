@@ -440,6 +440,8 @@ function dropComment()
 	
 	if (messageText.length > 0 && messageText.length < 250)
 	{
+		$('#submit-comment').attr('disabled', true);
+	
 		$.ajax({
 			type: 'POST',
 			url: 'drop-comment.php',
@@ -451,6 +453,7 @@ function dropComment()
 			},
 			success: function(data)
 			{
+				$('#submit-comment').attr('disabled', false);
 				//If successful, re-render the comment thread
 				if (data['success'])
 				{
@@ -465,6 +468,7 @@ function dropComment()
 			},
 			error: function(err)
 			{
+				$('#submit-comment').attr('disabled', false);
 				$('#comment-error').html("Something went wrong. Please try again later.");
 				$('#comment-error').show();
 			}
