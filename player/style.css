@@ -153,8 +153,12 @@ html
 	border-top: 1px solid #222;
 	height: 5%;
 	padding: 0;
-	text-align: center;
 	width: 100%;
+}
+#title-ticker
+{
+	color: #DDD;
+	font-size: 17px;
 }
 .foffbox-player-button
 {

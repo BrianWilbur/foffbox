@@ -12,6 +12,8 @@ var qualityPopoverTextSet = false;
 var volumePopoverTextSet = false;
 var commentAreaOpen = false;
 
+var tickerInitialized = false;
+
 var volume = 50;
 
 //Turn on autoplay automatically on first play
@@ -115,6 +117,8 @@ function getSongTitle(vidId)
 		
 		//Some minor title formatting (since Youtube titles are weird)
 		vidTitle = vidTitle.replace('  ', ' ');
+		
+		$('#title-ticker').html(vidTitle);
 		
 		//Reset height and width
 		$('#foffbox-player-video').css('height', '100%');
@@ -326,6 +330,8 @@ function requestNewSong(requestId)
 		container: 'body'
 	});
 	
+	$('#title-ticker').html('<img src="img/loading.gif"/>');
+	
 	//Ping DB and ask for a video
 	$.ajax({
 		type: 'POST',
@@ -411,6 +417,11 @@ function requestNewSong(requestId)
 				$('#request-slider').val(currentId);
 				$('#request-slider-val').html('#' + currentId);
 				$('#comment-field').focus();
+				
+				if (!tickerInitialized)
+				{
+					fixTicker();
+				}
 			}
 			else
 			{
@@ -515,6 +526,29 @@ function dropComment()
 	}
 	
 	document.location.hash = currentId;
+}
+
+/* Fixes the length of the title ticker */
+function fixTicker()
+{
+	//Determine width of title ticker
+	var leftWidth = $('#toolbar-left').width();
+	var leftPtWidth = $('#toolbar-left').offsetParent().width();
+	var leftActualWidth = (leftWidth/leftPtWidth) * 100;
+	
+	var rightWidth = $('#toolbar-right').width();
+	var rightPtWidth = $('#toolbar-right').offsetParent().width();
+	var rightActualWidth = (rightWidth/rightPtWidth) * 100;
+	
+	//Add some buffer for the ticker so it "goes beneath" the buttons
+	leftActualWidth -= 2;
+	rightActualWidth -= 2;
+	
+	var totalWidth = leftActualWidth + rightActualWidth;
+	var tickerWidth = 100 - totalWidth;
+	
+	$('#title-ticker').css('left', leftActualWidth + '%');
+	$('#title-ticker').css('width', tickerWidth + '%');
 }
 
 /* Let the user select different labels */
