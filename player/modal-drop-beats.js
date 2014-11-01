@@ -69,6 +69,8 @@ function dropBeat()
 				var errorMessage = data['message'];
 				$('#drop-beats-alert-failure').html(errorMessage).show();
 			}
+			
+			$('#drop-beat').prop('disabled', false);
 		},
 		error: function(err)
 		{

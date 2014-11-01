@@ -118,32 +118,23 @@ function getSongTitle(vidId)
 		//Some minor title formatting (since Youtube titles are weird)
 		vidTitle = vidTitle.replace('  ', ' ');
 		
-		$('#title-ticker').html(vidTitle);
+		$('#title-ticker-inner').html(vidTitle);
+		titleWidth = $('#title-ticker-inner').width();
+		console.log(titleWidth);
 		
 		//Reset height and width
 		$('#foffbox-player-video').css('height', '100%');
 		$('#foffbox-player-video').css('width', '100%');
 		
-		if (aspectRatio == "widescreen")
-		{
-			//Do widescreen stuff
-			/*var proposedHeight = $('#foffbox-player-video').width() * 0.5625;
-			var oldHeight = $('#foffbox-player-video').height();
-			var newHeight = $('#foffbox-player-video').height(proposedHeight);
-			
-			var heightDiff = Math.abs(newHeight - oldHeight);
-			var currentTop = $('#foffbox-player-video').top();
-			var topDiff = currentTop - heightDiff;
-			
-			$('#foffbox-player-video').css('top', topDiff + 'px');*/
-		}
-		else
+		if (aspectRatio != "widescreen")
 		{
 			//Do not-widescreen stuff
 			var height = $('#foffbox-player-video').height();
 			var width = height * 1.25;
 			$('#foffbox-player-video').css('width', width + 'px');
 		}
+		
+		fixTicker();
 	});
 }
 
@@ -311,6 +302,7 @@ function renderComment(commentNum, message, date)
  */
 function requestNewSong(requestId)
 {
+	$('#title-ticker').stop();
 	$('#comment-error').hide();
 
 	//Set dat Foffbox player up again
@@ -330,7 +322,7 @@ function requestNewSong(requestId)
 		container: 'body'
 	});
 	
-	$('#title-ticker').html('<img src="img/loading.gif"/>');
+	$('#title-ticker-inner').html('<img src="img/loading.gif"/>');
 	
 	//Ping DB and ask for a video
 	$.ajax({
@@ -417,11 +409,6 @@ function requestNewSong(requestId)
 				$('#request-slider').val(currentId);
 				$('#request-slider-val').html('#' + currentId);
 				$('#comment-field').focus();
-				
-				if (!tickerInitialized)
-				{
-					fixTicker();
-				}
 			}
 			else
 			{
@@ -532,23 +519,36 @@ function dropComment()
 function fixTicker()
 {
 	//Determine width of title ticker
+	var parentWidth = $('#toolbar-left').offsetParent().width();
+	
 	var leftWidth = $('#toolbar-left').width();
-	var leftPtWidth = $('#toolbar-left').offsetParent().width();
-	var leftActualWidth = (leftWidth/leftPtWidth) * 100;
+	var leftActualWidth = (leftWidth/parentWidth) * 100;
 	
 	var rightWidth = $('#toolbar-right').width();
-	var rightPtWidth = $('#toolbar-right').offsetParent().width();
-	var rightActualWidth = (rightWidth/rightPtWidth) * 100;
+	var rightActualWidth = (rightWidth/parentWidth) * 100;
+
+	var tickerLeft = leftWidth - 50;
+	var tickerWidth = parentWidth - (leftWidth + rightWidth) + 100;
+	
+	var rightBeginning = parentWidth - rightWidth;
 	
 	//Add some buffer for the ticker so it "goes beneath" the buttons
-	leftActualWidth -= 2;
-	rightActualWidth -= 2;
+	$('#title-ticker').width(tickerWidth);
 	
-	var totalWidth = leftActualWidth + rightActualWidth;
-	var tickerWidth = 100 - totalWidth;
-	
-	$('#title-ticker').css('left', leftActualWidth + '%');
-	$('#title-ticker').css('width', tickerWidth + '%');
+	function marqueePlay(){
+		$('#title-ticker').animate(
+			{
+				left: rightBeginning,
+			},
+			12000,
+			'linear',
+			function(){
+				$('#title-ticker').css('left', (tickerLeft - titleWidth) + 'px');
+				marqueePlay();
+			}
+		);
+	}
+	marqueePlay();
 }
 
 /* Let the user select different labels */

@@ -159,6 +159,7 @@ html
 {
 	color: #DDD;
 	font-size: 17px;
+	z-index: 1;
 }
 .foffbox-player-button
 {
