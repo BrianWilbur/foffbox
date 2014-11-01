@@ -234,13 +234,6 @@ function initializePopover()
 		//Finally, hide the popover (and start hiding the toolbar)
 		$('#foffbox-player-quality').popover('hide');
 	});
-	
-	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
-		if (!commentAreaOpen)
-		{
-			$('#foffbox-toolbar').trigger('mouseout');
-		}
-	});
 }
 
 /*
@@ -346,7 +339,10 @@ function requestNewSong(requestId)
 				var songId = data['submissionId'];
 				var songDate = data['submissionDate'];
 				var songViews = data['views'];
-				$('#foffbox-player-quote footer').html(songViews + " views. Dropped on " + songDate + ".");
+				var viewString = songViews <= 1 ? 'view' : 'views';
+				
+				
+				$('#foffbox-player-quote footer').html(songViews + " " + viewString + ". Dropped on " + songDate + ".");
 
 				//Some last-minute cleanup, then show the goods!
 				$('#loading').hide();
@@ -532,11 +528,13 @@ $(document).on('click', '#foffbox-player-last', function(event) {
 $(document).on('click', '#foffbox-player-comments', function(event){
 	if (commentAreaOpen)
 	{
-		$('#foffbox-player-right').animate({left: '100%'}, 500, function() { commentAreaOpen = false; });
+		commentAreaOpen = false;
+		$('#foffbox-player-right').animate({left: '100%'}, 500);
 	}
 	else
 	{
-		$('#foffbox-player-right').animate({left: '75%'}, 500, function() { commentAreaOpen = true; });
+		commentAreaOpen = true;
+		$('#foffbox-player-right').animate({left: '75%'}, 500);
 	}
 });
 
@@ -600,6 +598,13 @@ $(document).on('ready', function(){
 		animation: false,
 		container: 'body',
 		placement: 'top'
+	});
+	
+	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
+		if (!commentAreaOpen)
+		{
+			$('#foffbox-toolbar').trigger('mouseout');
+		}
 	});
 	
 	/* Fade toolbar in/out when mousing over/mousing out of it */

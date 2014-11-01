@@ -1,0 +1,87 @@
+/* Popover content */
+.popover
+{
+	background-color: #111 !important;
+	color: #DDD !important;
+	
+}
+.popover-title
+{
+	background-color: #0D0D0D !important;
+	color: #CCC !important;
+	display: none !important;
+	text-align: center !important;
+}
+.popover-content
+{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	padding-top: 12px !important;
+	padding-bottom: 12px !important;
+}
+.popover-row
+{
+	cursor: pointer;
+	padding-left: 12px;
+	padding-right: 12px;
+	width: 100%;
+}
+.popover-row-selected
+{
+	color: #8DC3FC !important;
+}
+.popover-row:hover
+{
+	background-color: #222;
+}
+.arrow
+{
+	display: none !important;
+}
+
+/* Popover Content -- Volume */
+input[type=range]#volume-slider {
+    -webkit-appearance: none !important;
+	outline: none;
+	width: 100px;
+}
+
+input[type=range]#volume-slider::-webkit-slider-runnable-track {
+	background-color: #333;
+	border: none;
+	height: 2px;
+	outline: none;
+	width: 100px;
+}
+
+input[type=range]#volume-slider::-webkit-slider-thumb {
+	-webkit-appearance:none !important;
+	background-color: #CCC;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	margin-top: -5px;
+	width: 12px;
+}
+
+/* Mozilla slider */
+input[type="range"]#volume-slider::-moz-range-track {
+	-moz-appearance:none !important;
+	background-color: #333;
+	border: none;
+	height: 2px;
+	outline: none;
+	width: 100px;
+}
+
+input[type="range"]#volume-slider::-moz-range-thumb {
+	-moz-appearance:none !important;
+	background-color: #CCC;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 12px;
+	outline: none;
+	width: 12px;
+}
