@@ -21,9 +21,9 @@ $emailMessage = "
 			
 			<hr/><br>
 			
-			<h4 style='font-weight:normal; margin-top:5px; margin-bottom:5px; text-align:center;'>$message <a href='http://www.foffytrack.com/foffbox/wall.php' style='color:#86DEC5;'>Click to visit the Foffbox</a>.<br><br>
+			<h4 style='font-weight:normal; margin-top:5px; margin-bottom:5px; text-align:center;'>$message <a href='http://www.foffytrack.com/foffbox' style='color:#86DEC5;'>Click to visit the Foffbox</a>.<br><br>
 			
-			Also, don't forget to check out <a href='http://foffytrack.com/foffbox/player/player.phtml' style='color:#86DEC5;'>Foffbox Radio</a>, where you can listen to any beat at any time.
+			Also, don't forget to check out the <a href='http://foffytrack.com/foffbox/player/player.phtml' style='color:#86DEC5;'>Foffbox Playlist</a>, where you can listen to any beat at any time.
 			
 		</body>
 	</html>

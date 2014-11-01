@@ -715,6 +715,6 @@ $(document).on('ready', function(){
 
 	$('#foffbox-toolbar').on('mouseover', function(event){
 		$(this).stop();
-		$(this).fadeTo(500, 1.0);
+		$(this).fadeTo(50, 1.0);
 	});
 });
