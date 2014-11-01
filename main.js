@@ -4,6 +4,7 @@ var suggestionMousedOver = false;
 //On ready, initialize
 $(document).ready(function(){
 	initialize();
+	initializeNumSubmissions();
 });
  
 /*
@@ -12,7 +13,7 @@ $(document).ready(function(){
 function initialize()
 {
 	//Focus first text box
-	$('#youtube-link').focus();
+	$('#drop-beats-url').focus();
 	
 	//Initialize "characters remaining"
 	$('#message').trigger('keypress');
@@ -146,7 +147,7 @@ function initializeDropBeats()
 		
 		if ($('#foffbox-form').valid())
 		{
-			url = $('#youtube-link').val();
+			url = $('#drop-beats-url').val();
 			message = $('#message').val();
 			signUp = true;
 			email = $('#email').val();
@@ -178,9 +179,9 @@ function initializeDropBeats()
 					{
 						var successMessage = data['message'];
 						//On success, clear out all the fields and re-focus the first text box so you can enter a new song right away
-						$('#youtube-link').val('');
+						$('#drop-beats-url').val('');
 						$('#message').val('');
-						$('#youtube-link').focus();
+						$('#drop-beats-url').focus();
 						$('#message').trigger('keypress');
 						$('#alert-success').show();
 						$('#success-message').html(successMessage);
@@ -225,6 +226,29 @@ function getSongSuggestion()
 		error: function()
 		{
 			$('#suggestion').attr('title', "Ask again later.<br><br>(Something went wrong.)").tooltip('fixTitle').tooltip('show');
+		}
+	});
+}
+
+/*
+ * Initializes the number of Submissions that currently exist in the archive.
+ */
+function initializeNumSubmissions()
+{
+	$.ajax({
+		type: 'GET',
+		url: 'get-num-submissions.php',
+		dataType: 'json',
+		success: function(data)
+		{
+			if (data['success'])
+			{
+				$('#submission-number').html(data['numSubmissions']);
+			}
+		},
+		error: function()
+		{
+			//Just fail gracefully
 		}
 	});
 }

@@ -37,7 +37,7 @@ else if ($requestId > $maxId)
 
 //Now choose a video based on the input request ID. We account for invalid/nonexistent IDs here.
 $sqlStatement = $pdo->prepare("
-	SELECT `id`, `youtubeUrl`, `message`, `dateSubmitted`
+	SELECT `id`, `youtubeUrl`, `message`, `views`, `dateSubmitted`
 	FROM `submissions_archive`
 	WHERE `id` >= :requestId
 	ORDER BY `id` ASC
@@ -54,6 +54,18 @@ if (empty($results))
 }
 
 $result = $results[0];
+
+$views = intval($result['views']);
+$views++;
+
+$sqlStatement = $pdo->prepare("
+	UPDATE `submissions_archive`
+	SET `views` = :views
+	WHERE `id` = :id;
+");
+$sqlStatement->bindValue(':views', $views);
+$sqlStatement->bindValue(':id', $result['id']);
+$sqlStatement->execute();
 
 $retrievedId = $result['id'];
 
@@ -75,8 +87,8 @@ if (empty($resultNextLowest))
 	return;
 }
 
-$resultNextLowest = $resultNextLowest[0]['nextId'];
 
+$resultNextLowest = $resultNextLowest[0]['nextId'];
 if (empty($resultNextLowest))
 {
 	$resultNextLowest = $maxId;
@@ -115,7 +127,8 @@ echo(json_encode(
 		'submissionId' 		=> intval($result['id']),
 		'submissionMessage' => $result['message'],
 		'submissionUrl'		=> $result['youtubeUrl'],
-		'success' 			=> true
+		'success' 			=> true,
+		'views'				=> $views
 	)
 ));
 return;

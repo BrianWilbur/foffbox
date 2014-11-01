@@ -2,9 +2,20 @@ var previousId = 0;
 var currentId = 0;
 var maxId = 0;
 var reported = false;
+var vidTitle = '';
+var aspectRatio = '';
+
+var show_video = false;
+
+var quality = "medium";
+var qualityPopoverTextSet = false;
+var volumePopoverTextSet = false;
+var commentAreaOpen = false;
+
+var volume = 50;
 
 //Turn on autoplay automatically on first play
-var playerStarted = false;
+var playerStopped = true;
 
 //Play modes
 var shuffle = false;
@@ -25,11 +36,11 @@ function onYouTubeIframeAPIReady() {
 		mediaContentUrl: '',
 		videoId: '',
 		playerVars: {
+			autoplay: 0,
 			color: 'white',
 			controls: 0,
 			iv_load_policy: 3,
 			modestbranding: 0,
-			origin: "https://www.foffytrack.com",
 			rel: 0,
 			showinfo: 0,
 		},
@@ -72,16 +83,62 @@ function onPlayerStateChange(event)
 		shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
 	}
 	
-	//'Til I decide if this functionality should be kept
-	/*else if (event.data === 1 && !playerStarted)
+	//Video is playing
+	else if (event.data === 1)
 	{
-		playerStarted = true;
+		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-pause"></span>');
+		playerStopped = false;
+		event.target.setPlaybackQuality(quality);
+	}
+	
+	//Video is paused
+	else if (event.data === 2 || event.data === 5)
+	{
+		$('#foffbox-player-play-pause').html('<span class="glyphicon glyphicon-play"></span>');
+		playerStopped = true;
+	}
+	
+	else if (event.data === 3)
+	{
+		event.target.setPlaybackQuality(quality);
+	}
+}
+
+/* Gets the title of the current video by ID and appends it to the appropriate element. */
+function getSongTitle(vidId)
+{
+	$.get('https://gdata.youtube.com/feeds/api/videos/' + vidId + '?v=2&alt=jsonc', function(data) {
+		var aspectRatio = data.data.aspectRatio;
+		vidTitle = data.data.title;
 		
-		if (!autoplay)
+		//Some minor title formatting (since Youtube titles are weird)
+		vidTitle = vidTitle.replace('  ', ' ');
+		
+		//Reset height and width
+		$('#foffbox-player-video').css('height', '100%');
+		$('#foffbox-player-video').css('width', '100%');
+		
+		if (aspectRatio == "widescreen")
 		{
-			$('#foffbox-player-autoplay').trigger('click');
+			//Do widescreen stuff
+			/*var proposedHeight = $('#foffbox-player-video').width() * 0.5625;
+			var oldHeight = $('#foffbox-player-video').height();
+			var newHeight = $('#foffbox-player-video').height(proposedHeight);
+			
+			var heightDiff = Math.abs(newHeight - oldHeight);
+			var currentTop = $('#foffbox-player-video').top();
+			var topDiff = currentTop - heightDiff;
+			
+			$('#foffbox-player-video').css('top', topDiff + 'px');*/
 		}
-	}*/
+		else
+		{
+			//Do not-widescreen stuff
+			var height = $('#foffbox-player-video').height();
+			var width = height * 1.25;
+			$('#foffbox-player-video').css('width', width + 'px');
+		}
+	});
 }
 
 /* Initializes page contents */
@@ -90,6 +147,93 @@ function initialize()
 	$('#loading').show();
 	$('#foffbox-player').css('opacity', '0.0');
 	$('#comment-error').hide();
+}
+
+/* Initializes popover contents */
+function initializePopover()
+{
+	if (!qualityPopoverTextSet)
+	{
+		//Initialize popover content (it's pretty complicated, so we do it in JS instead of HTML)
+		popoverContent = "\
+		<div id='quality-highres' class='popover-row'> Over 1080p</div>\
+		<div id='quality-1080' class='popover-row'> 1080p (HD)</div>\
+		<div id='quality-720' class='popover-row'> 720p (HD)</div>\
+		<div id='quality-480' class='popover-row'> 480p</div>\
+		<div id='quality-360' class='popover-row popover-row-selected'> 360p</div>\
+		<div id='quality-240' class='popover-row'> 240p</div>";
+		
+		//Initialize Quality popover
+		$('#foffbox-player-quality').popover({
+			container: 'body',
+			content: function() { return popoverContent; },
+			html: true,
+			placement: 'top',
+			title: 'Select Video Quality',
+			trigger: 'focus',
+		});
+		
+		qualityPopoverTextSet = true;
+	}
+	
+	if (!volumePopoverTextSet)
+	{
+		volumePopoverContent = "<input id='volume-slider' type='range' min='0' max='100' step='1' value='50'/>";
+		
+		//Initialize Quality popover
+		$('#foffbox-player-volume').popover({
+			container: 'body',
+			content: function() { return volumePopoverContent; },
+			html: true,
+			placement: 'top',
+			title: '',
+			trigger: 'focus',
+		});
+		
+		$('#foffbox-player-volume').find('.popover-content').css('padding', '10px');
+		volumePopoverTextSet = true;
+	}
+	
+	//Toggle popovers on click
+	$('#foffbox-player-quality').on('click', function(event){
+		$('#foffbox-player-volume').popover('hide');
+		$('#foffbox-player-quality').popover('toggle');
+	});
+	
+		//Toggle popovers on click
+	$('#foffbox-player-volume').on('click', function(event){
+		$('#foffbox-player-volume').popover('toggle');
+		$('#foffbox-player-quality').popover('hide');
+	});
+
+	$(document).on('click', '.popover-row', function(event)
+	{
+		//Based on the selected quality, set the 'quality' string to a different value.
+		//The 'quality' string is used directly to set the quality of videos each time one is requested.
+		switch ($(this).attr('id'))
+		{
+			case 'quality-highres': quality = "highres"; break;
+			case 'quality-1080': quality = "hd1080"; break;
+			case 'quality-720': quality = "hd720"; break;
+			case 'quality-480': quality = "large"; break;
+			case 'quality-360': quality = "medium"; break;
+			case 'quality-240': quality = "small"; break;
+			default: quality = "medium"; break;
+		}
+		
+		//Remove selection from all existing child elements of this parent
+		var children = $(this).parent().children('.popover-row');
+		children.each(function(event){
+			$(this).removeClass('popover-row-selected');
+		});
+		
+		//Select the element the user clicked, then update the content (otherwise it'll reinitialize every time the user brings up the popover)
+		$(this).addClass('popover-row-selected');
+		popoverContent = $(this).closest('.popover-content').html();
+		
+		//Finally, hide the popover (and start hiding the toolbar)
+		$('#foffbox-player-quality').popover('hide');
+	});
 }
 
 /*
@@ -141,7 +285,7 @@ function requestNewSong(requestId)
 
 	//Set dat Foffbox player up again
 	$('#loading').show();
-	$('#foffbox-player').css('opacity', '0.0');
+	$('#foffbox-player-video').css('opacity', '0.0');
 	
 	//Clear out commend field & comments
 	$('#comment-field').val('');
@@ -152,11 +296,11 @@ function requestNewSong(requestId)
 	$('#foffbox-player-report span').removeClass('glyphicon-ok');
 	$('#foffbox-player-report span').removeClass('foffbox-player-button-active');
 	$('#foffbox-player-report').tooltip({
-		placement: 'bottom',
+		placement: 'top',
 		container: 'body'
 	});
 	
-	//Ping DB and ask for 10 videos
+	//Ping DB and ask for a video
 	$.ajax({
 		type: 'POST',
 		url: 'request-song.php',
@@ -168,7 +312,7 @@ function requestNewSong(requestId)
 		success: function(data)
 		{
 			$('#request-slider').attr('disabled', false);
-			$('#request-slider').attr('title', "Drag me. Jump beats. Have fun.");
+			$('#request-slider').attr('title', "Slide to jump to another song.");
 			$('#request-slider').tooltip('fixTitle').tooltip('hide');
 		
 			if (data['success'])
@@ -176,6 +320,10 @@ function requestNewSong(requestId)
 				//Load up the appropriate video
 				var songUrl = data['submissionUrl'];
 				var newUrl = songUrl.replace("watch?v=", "embed/");
+				
+				var vidId = newUrl.split('embed/')[1];
+				getSongTitle(vidId);
+				
 				newUrl += "?";
 				newUrl += "wmode=opaque";
 				
@@ -190,14 +338,18 @@ function requestNewSong(requestId)
 				//Set up footer
 				var songId = data['submissionId'];
 				var songDate = data['submissionDate'];
-				$('#foffbox-player-quote footer').html("#" + songId + ", Dropped on " + songDate);
+				var songViews = data['views'];
+				var viewString = songViews <= 1 ? 'view' : 'views';
 				
+				
+				$('#foffbox-player-quote footer').html(songViews + " " + viewString + ". Dropped on " + songDate + ".");
+
 				//Some last-minute cleanup, then show the goods!
 				$('#loading').hide();
-				
-				$('#foffbox-player').css('opacity', '1.0');
-				$('#foffbox-player-video').height($('#foffbox-player-video').width() * 0.75);
-				
+
+				$('#foffbox-player-video').css('opacity', '1.0');
+				//$('#foffbox-player-video').height($('#foffbox-player-video').width() * 0.75);
+
 				//Set some IDs for convenience's sake
 				currentId = data['submissionId'];
 				previousId = data['previousId'];
@@ -210,24 +362,6 @@ function requestNewSong(requestId)
 				
 				//Set the URL's hash to include the requested ID (linking to & bookmarking beats! Sweet!)
 				document.location.hash = currentId;
-				
-				//Reset height of comment area
-				$('#comment-field').css('height', '64px');
-				
-				//Adjust height of comment box to match that of video before rendering comments (unless the quote is too big)
-				var quoteBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
-				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
-				var commentTop = $('#comment-thread-wrapper').offset().top;
-				var finalHeight = leftSideBottom - commentTop - 15;
-				
-				//If the comment is too long, just make the comment section the same as the current height of the entire comment area
-				var commentFormHeight = $('#comment-group').height();
-				if (finalHeight < commentFormHeight)
-				{
-					finalHeight = commentFormHeight;
-				}
-				
-				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
 				
 				//Render comments
 				renderComments(data['comments']);
@@ -390,6 +524,20 @@ $(document).on('click', '#foffbox-player-last', function(event) {
 	requestNewSong(maxId);
 });
 
+/* Open/close the comments view */
+$(document).on('click', '#foffbox-player-comments', function(event){
+	if (commentAreaOpen)
+	{
+		commentAreaOpen = false;
+		$('#foffbox-player-right').animate({left: '100%'}, 500);
+	}
+	else
+	{
+		commentAreaOpen = true;
+		$('#foffbox-player-right').animate({left: '75%'}, 500);
+	}
+});
+
 /* When the user clicks the "submit comment" button, drop a comment */
 $(document).on('click', '#submit-comment', function(event){
 	dropComment();
@@ -403,6 +551,17 @@ $(document).on('input', '#request-slider', function(event){
 	$('#request-slider').tooltip('fixTitle').tooltip('show');
 });
 
+/* Play/pause the video on button click */
+$(document).on('click', '#foffbox-player-play-pause, #foffbox-player-video-cover', function(event){
+	playerStopped ? player.playVideo() : player.pauseVideo();
+});
+
+/* Stop events from bubbling up to the parent -- we don't want clicks on the comments section causing the video to play */
+$(document).on('click', '#foffbox-player-right', function(event){
+	event.stopPropagation();
+	event.preventDefault();
+});
+
 /* Request beat based on value of slider */
 $(document).on('mouseup', '#request-slider', function(event){
 	$('#request-slider').attr('disabled', true);
@@ -411,23 +570,54 @@ $(document).on('mouseup', '#request-slider', function(event){
 	requestNewSong(sliderValue);
 });
 
+/* Set volume based on value of other slider */
+$(document).on('mousemove', '#volume-slider', function(event){
+	volume = $(this).val();
+	$(this).attr('value', volume);
+	player.setVolume(volume);
+	volumePopoverContent = $(this).closest('.popover-content').html();
+});
+
 /* Document ready */
 $(document).on('ready', function(){
 	initialize();
+	initializePopover();
 	
+	//Initialize the Youtube API Script
 	var tag = document.createElement('script');
-	tag.src = "//www.youtube.com/iframe_api";
+	tag.src = "https://www.youtube.com/iframe_api";
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	
-	// Initialize control tooltips
+	//Initialize tooltips for the controls @ the bottom of the screen
 	$('.foffbox-player-button').tooltip({
 		container: 'body',
-		placement: 'bottom'
+		placement: 'top'
 	});
 	$('#request-slider').tooltip({
 		animation: false,
 		container: 'body',
-		placement: 'right'
+		placement: 'top'
+	});
+	
+	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
+		if (!commentAreaOpen)
+		{
+			$('#foffbox-toolbar').trigger('mouseout');
+		}
+	});
+	
+	/* Fade toolbar in/out when mousing over/mousing out of it */
+	$('#foffbox-toolbar').on('mouseout', function(event){
+		if ($('.popover-content').length <= 0 && !commentAreaOpen)
+		{
+			$(this).stop();
+			$(this).fadeTo(3000, 0.20);
+		}
+	});
+
+	$('#foffbox-toolbar').on('mouseover', function(event){
+		$(this).stop();
+		$(this).fadeTo(500, 1.0);
 	});
 });
