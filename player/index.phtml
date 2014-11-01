@@ -13,6 +13,7 @@
 		<!-- Bootstrap CDN -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="scrollbars.css">
 		<title>Foffbox Radio</title>
 	</head>
 	<body style="background-color: #111 !important; background-image:none !important;">
@@ -20,56 +21,51 @@
 		<?php //include("../../navbar/navbar.phtml"); ?>
 		
 		<div id="foffbox-player-video"></div>
-		<div id="foffbox-player-video-cover"></div>
+		<div id="foffbox-player-video-cover">
+		
+			<div id="foffbox-player-right" class="col-md-5">
+
+				<!-- Message & details -->
+				<blockquote id="foffbox-player-quote">
+					<p>
+						Something is broken.<br>
+						No quotes to be found here. Huh.<br>
+						Maybe Javascript's off?
+					</p>
+					<footer>The Foff</footer>
+				</blockquote>
+
+				<!-- Comment section -->
+				<div class="row">
+					<div id="comment-area">
+					
+						<!-- "Drop comment" box -->
+						<div id="comment-group" class="form-group">
+							<textarea id="comment-field" class="form-control" type="text" name="messageBox" placeholder="Anything you want to say?" maxlength="250" rows="2" required></textarea><br>
+							<a id="submit-comment" class="btn btn-block btn-primary" style="cursor:pointer;">
+								<span class="glyphicon glyphicon-comment"></span> Drop that comment!
+							</a>
+						</div>
+
+						<div id="comment-error" class="alert alert-danger"></div>
+
+						<br>
+
+						<!-- Comment thread -->
+						<div id="comment-thread-wrapper">
+							<h4>Recent comments</h4>
+							<div id="comment-thread"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		
+		</div>
 
 		<div id="loading" style="color:#DDD; text-align:center;">
 			Serving up some more beats, sit tight...<br>
 			<img src="img/loading.gif"/><br><br><br>
-		</div>
-
-		<div id="foffbox-player">
-			<div class="row row-padding-fix">
-				<div id="foffbox-player-left" class="col-md-5 col-md-offset-1">
-
-				</div>
-
-				<div id="foffbox-player-right" class="col-md-5">
-
-					<!-- Message & details -->
-					<blockquote id="foffbox-player-quote" style="margin-left: -15px;">
-						<p>
-							Something is broken.<br>
-							No quotes to be found here. Huh.<br>
-							Maybe Javascript's off?
-						</p>
-						<footer>The Foff</footer>
-					</blockquote>
-
-					<!-- Comment section -->
-					<div class="row">
-						<div id="comment-area">
-
-							<!-- "Drop comment" box -->
-							<div id="comment-group" class="form-group">
-								<textarea id="comment-field" class="form-control" type="text" name="messageBox" placeholder="Anything you want to say?" maxlength="250" rows="2" required></textarea><br>
-								<a id="submit-comment" class="btn btn-block btn-primary" style="cursor:pointer;">
-									<span class="glyphicon glyphicon-comment"></span> Drop that comment!
-								</a>
-							</div>
-
-							<div id="comment-error" class="alert alert-danger"></div>
-
-							<br>
-
-							<!-- Comment thread -->
-							<div id="comment-thread-wrapper">
-								<h4>Recent comments</h4>
-								<div id="comment-thread"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 		
 		<nav id="foffbox-toolbar" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
@@ -93,10 +89,11 @@
 
 			<!-- Extra functions -->
 			<div class="btn-group pull-right" role="toolbar" style="position:absolute; right: 0; top: 0; height: 100%;">
+				<a id="foffbox-player-drop" class="btn btn-default foffbox-player-button" title="Add beat" data-toggle="modal" data-target="#drop-beats-modal"><span class="glyphicon glyphicon-cloud-upload"></span></a>
+				<a id="foffbox-player-comments" class="btn btn-default foffbox-player-button" title="Comments"><span class="glyphicon glyphicon-comment"></span></a>
 				<a id="foffbox-player-volume" class="btn btn-default foffbox-player-button" title="Volume"><span class="glyphicon glyphicon-volume-up"></span></a>
 				<a id="foffbox-player-quality" class="btn btn-default foffbox-player-button" title="Video Quality"><span class="glyphicon glyphicon-eye-open"></span></a>
 				<a id="foffbox-player-report" class="btn btn-default foffbox-player-button" title="Report Non-beat"><span class="glyphicon glyphicon-flag"></span></a>
-				<a id="foffbox-player-drop" class="btn btn-default foffbox-player-button" title="Add beat" data-toggle="modal" data-target="#drop-beats-modal"><span class="glyphicon glyphicon-cloud-upload"></span></a>
 			</div>
 		</nav>
 

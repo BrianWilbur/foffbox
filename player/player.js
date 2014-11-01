@@ -205,7 +205,6 @@ function initializePopover()
 		$('#foffbox-player-quality').popover('hide');
 	});
 
-
 	$(document).on('click', '.popover-row', function(event)
 	{
 		//Based on the selected quality, set the 'quality' string to a different value.
@@ -362,24 +361,6 @@ function requestNewSong(requestId)
 				
 				//Set the URL's hash to include the requested ID (linking to & bookmarking beats! Sweet!)
 				document.location.hash = currentId;
-				
-				//Reset height of comment area
-				$('#comment-field').css('height', '64px');
-				
-				//Adjust height of comment box to match that of video before rendering comments (unless the quote is too big)
-				var quoteBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
-				var leftSideBottom = $('#foffbox-player-left').offset().top + $('#foffbox-player-left').height();
-				var commentTop = $('#comment-thread-wrapper').offset().top;
-				var finalHeight = leftSideBottom - commentTop - 15;
-				
-				//If the comment is too long, just make the comment section the same as the current height of the entire comment area
-				var commentFormHeight = $('#comment-group').height();
-				if (finalHeight < commentFormHeight)
-				{
-					finalHeight = commentFormHeight;
-				}
-				
-				$('#comment-thread-wrapper').css('height', finalHeight + 'px');
 				
 				//Render comments
 				renderComments(data['comments']);
