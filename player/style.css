@@ -87,16 +87,21 @@ html
 	padding-right: 15px !important;
 	padding-top: 15px !important;
 }
+#foffbox-player-quote
+{
+	margin-top: 15px !important;
+}
 #foffbox-player-right
 {
 	background-color: #222;
 	border: 1px solid #111;
 	color: #777;
+	cursor: initial;
 	height: 95%;
 	margin: 0;
 	overflow-y: auto;
 	position: fixed;
-	right: 0;
+	left: 100%;
 	top: 0;
 	width: 25%;
 	word-wrap: break-word;

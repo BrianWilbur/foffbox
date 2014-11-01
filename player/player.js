@@ -10,6 +10,7 @@ var show_video = false;
 var quality = "medium";
 var qualityPopoverTextSet = false;
 var volumePopoverTextSet = false;
+var commentAreaOpen = false;
 
 var volume = 50;
 
@@ -235,7 +236,10 @@ function initializePopover()
 	});
 	
 	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
-		$('#foffbox-toolbar').trigger('mouseout');
+		if (!commentAreaOpen)
+		{
+			$('#foffbox-toolbar').trigger('mouseout');
+		}
 	});
 }
 
@@ -528,6 +532,18 @@ $(document).on('click', '#submit-comment', function(event){
 	dropComment();
 });
 
+/* Open/close the comments view */
+$(document).on('click', '#foffbox-player-comments', function(event){
+	if (commentAreaOpen)
+	{
+		$('#foffbox-player-right').animate({left: '100%'}, 500, function() { commentAreaOpen = false; });
+	}
+	else
+	{
+		$('#foffbox-player-right').animate({left: '75%'}, 500, function() { commentAreaOpen = true; });
+	}
+});
+
 /* Update tooltip as request slider is moved */
 $(document).on('input', '#request-slider', function(event){
 	var sliderValue = $(this).val();
@@ -539,6 +555,12 @@ $(document).on('input', '#request-slider', function(event){
 /* Play/pause the video on button click */
 $(document).on('click', '#foffbox-player-play-pause, #foffbox-player-video-cover', function(event){
 	playerStopped ? player.playVideo() : player.pauseVideo();
+});
+
+/* Stop events from bubbling up to the parent -- we don't want clicks on the comments section causing the video to play */
+$(document).on('click', '#foffbox-player-right', function(event){
+	event.stopPropagation();
+	event.preventDefault();
 });
 
 /* Request beat based on value of slider */
@@ -581,13 +603,13 @@ $(document).on('ready', function(){
 	
 	/* Fade toolbar in/out when mousing over/mousing out of it */
 	$('#foffbox-toolbar').on('mouseout', function(event){
-		if ($('.popover-content').length <= 0)
+		if ($('.popover-content').length <= 0 && !commentAreaOpen)
 		{
 			$(this).stop();
 			$(this).fadeTo(3000, 0.20);
 		}
 	});
-	
+
 	$('#foffbox-toolbar').on('mouseover', function(event){
 		$(this).stop();
 		$(this).fadeTo(500, 1.0);
