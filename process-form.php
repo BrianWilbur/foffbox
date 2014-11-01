@@ -148,22 +148,25 @@ function validateData()
 	
 	$lastInsertId = $pdo->lastInsertId();
 	
-	//Insert the label (if any) into the archiveLabels directory alon with the user's IP Address
-	$sqlStatement = $pdo->prepare("
-		INSERT INTO `submissions_archiveLabels`
-			(`submissionsArchiveId`, `submissionsLabelId`, `ipAddress`)
-		VALUES
-			(:songId, :labelId, :ipAddress)
-		ON DUPLICATE KEY UPDATE
-			`submissionsLabelId` = :labelId;
-	");
-	$sqlStatement->bindValue(':songId', $lastInsertId);
-	$sqlStatement->bindValue(':labelId', $labelId);
-	$sqlStatement->bindValue(':ipAddress', $ipAddress);
-	try { $sqlStatement->execute(); }
-	catch (\Exception $e)
+	if (!empty($labelId))
 	{
-		//We don't care if this happens, they can just label it later
+		//Insert the label (if any) into the archiveLabels directory alon with the user's IP Address
+		$sqlStatement = $pdo->prepare("
+			INSERT INTO `submissions_archiveLabels`
+				(`submissionsArchiveId`, `submissionsLabelId`, `ipAddress`)
+			VALUES
+				(:songId, :labelId, :ipAddress)
+			ON DUPLICATE KEY UPDATE
+				`submissionsLabelId` = :labelId;
+		");
+		$sqlStatement->bindValue(':songId', $lastInsertId);
+		$sqlStatement->bindValue(':labelId', $labelId);
+		$sqlStatement->bindValue(':ipAddress', $ipAddress);
+		try { $sqlStatement->execute(); }
+		catch (\Exception $e)
+		{
+			//We don't care if this happens, they can just label it later
+		}
 	}
 	
 	//Commit e-mail address to the "I want a digest" DB if necessary
