@@ -10,11 +10,15 @@ var show_video = false;
 var quality = "medium";
 var qualityPopoverTextSet = false;
 var volumePopoverTextSet = false;
+var labelPopoverTextSet = false;
 var commentAreaOpen = false;
 
 var tickerInitialized = false;
 
 var volume = 50;
+
+//Labels currently included in the song queue
+var selectedLabelFilters;
 
 //Turn on autoplay automatically on first play
 var playerStopped = true;
@@ -121,7 +125,6 @@ function getSongTitle(vidId)
 		$('#title-ticker-inner').html(vidTitle);
 		$('#title-ticker-loading').hide();
 		titleWidth = $('#title-ticker-inner').width();
-		console.log(titleWidth);
 		
 		//Reset height and width
 		$('#foffbox-player-video').css('height', '100%');
@@ -192,16 +195,41 @@ function initializePopover()
 		volumePopoverTextSet = true;
 	}
 	
+	if (!labelPopoverTextSet)
+	{
+		labelPopoverContent = "Hi";
+		
+		//Initialize Quality popover
+		$('#foffbox-player-labels').popover({
+			container: 'body',
+			content: function() { return labelPopoverContent; },
+			html: true,
+			placement: 'top',
+			title: 'Filter by Song Type',
+			trigger: 'focus',
+		});
+		
+		$('#foffbox-player-labels').find('.popover-content').css('padding', '10px');
+		labelPopoverTextSet = true;
+	}
+	
 	//Toggle popovers on click
 	$('#foffbox-player-quality').on('click', function(event){
-		$('#foffbox-player-volume').popover('hide');
+		$('#foffbox-player-labels').popover('hide');
 		$('#foffbox-player-quality').popover('toggle');
+		$('#foffbox-player-volume').popover('hide');
 	});
 	
-		//Toggle popovers on click
 	$('#foffbox-player-volume').on('click', function(event){
-		$('#foffbox-player-volume').popover('toggle');
+		$('#foffbox-player-labels').popover('hide');
 		$('#foffbox-player-quality').popover('hide');
+		$('#foffbox-player-volume').popover('toggle');
+	});
+	
+	$('#foffbox-player-labels').on('click', function(event){
+		$('#foffbox-player-labels').popover('toggle');
+		$('#foffbox-player-quality').popover('hide');
+		$('#foffbox-player-volume').popover('hide');
 	});
 
 	$(document).on('click', '.popover-row', function(event)
@@ -266,6 +294,7 @@ function renderComments(comments)
 function renderLabels(labels)
 {
 	$('#comment-labels').html('');
+	labelPopoverContent = '';
 	
 	if (labels.length > 0)
 	{
@@ -277,6 +306,9 @@ function renderLabels(labels)
 			var classString = labelSelected ? 'primary' : 'default';
 			
 			$('#comment-labels').append('<a class="comment-label label label-' + classString + '" labelId="' + labelId + '" style="display: inline-block !important;">' + labelName + '</a> ');
+			
+			var popoverClassString = $.inArray(labelId, selectedLabelFilters) > -1 ? 'primary' : 'default';
+			labelPopoverContent += '<div class="filter-label label label-' + popoverClassString + '" labelId="' + labelId + '">' + labelName + '</div>';
 		}
 	}
 	
