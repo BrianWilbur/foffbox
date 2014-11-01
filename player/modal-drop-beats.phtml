@@ -30,6 +30,37 @@
 					<label for="drop-beats-message">Include a message:</label> <span id="drop-beats-message-remaining" class="pull-right field-subtext">??? remaining</span>
 					<textarea id="drop-beats-message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
 					
+					<!-- Label selection -->
+					<?php
+						$configMode = 'live';
+						$connectionData = require_once("../server-config.php");
+						$connectionData = $connectionData[$configMode];
+						$pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
+						$sqlStatement = $pdo->prepare("SELECT `id`, `name` FROM `submissions_labels` WHERE `active` = 1");
+						$sqlStatement->execute();
+						$labelResults = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+					
+						if (!empty($labelResults))
+						{
+							echo<<<EOT
+							<label for="drop-beats-label">How would you label this song? (Optional)</label>
+							<select id="drop-beats-label" class="form-control" name="drop-beats-label">
+								<option value="0">Let others label it for me</option>
+								<optgroup label="----------"></optgroup>
+EOT;
+
+								foreach ($labelResults as $labelResult)
+								{
+									$id = $labelResult['id'];
+									$name = $labelResult['name'];
+									
+									echo("<option value=\"$id\">$name</option>");
+								}
+							
+							echo('</select><br>');
+						}
+					?>
+					
 					<!-- Loading alert -->
 					<div id="drop-beats-alert-loading" class="alert alert-info alert-hide"><img src="img/loading.gif"/> Dropping requested beat...hold on a second.</div>
 					
@@ -42,7 +73,7 @@
 					<!-- Failure alert -->
 					<div id="drop-beats-alert-failure" class="alert alert-danger alert-hide">Something went wrong, but we're not sure what. Try again later...we'll have it fixed by then. Promise.</div>
 					
-					<button id="drop-beat" class="btn btn-primary btn-large btn-block"><span class="glyphicon glyphicon-fire"></span>&nbsp; Drop that beat!</button><br>
+					<button id="drop-beat" class="btn btn-primary btn-large btn-block"><span class="glyphicon glyphicon-cloud-upload"></span> Add your song!</button><br>
 			</div>
 		</div>
 	</div>

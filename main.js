@@ -183,6 +183,7 @@ function initializeDropBeats()
 						//On success, clear out all the fields and re-focus the first text box so you can enter a new song right away
 						$('#drop-beats-url').val('');
 						$('#message').val('');
+						$('#label').val(0);
 						$('#drop-beats-url').focus();
 						$('#message').trigger('keypress');
 						$('#alert-success').show();

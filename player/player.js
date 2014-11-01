@@ -54,6 +54,8 @@ function onYouTubeIframeAPIReady() {
 /* Start requesting songs when the player first becomes ready */
 function onPlayerReady(event)
 {
+	player.setVolume(volume);
+
 	//If they have a URL already in their hash, go to that ID. Otherwise, request a new (random) song.
 	var windowHash = window.location.hash;
 	windowHash = windowHash.replace('#', '');

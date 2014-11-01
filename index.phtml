@@ -102,9 +102,7 @@ Go home. You are drunk.
 									<!-- Message -->
 									<label for="message">Include a message:</label> <span id="message-remaining" class="pull-right field-subtext">500 remaining</span>
 									<textarea id="message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
-									
 
-									
 										<?php
 											$configMode = 'live';
 											$connectionData = require_once("server-config.php");
@@ -137,10 +135,6 @@ EOT;
 									
 									</select>
 
-									<!-- Email address
-									<label for="email">Wanna hear when new beats drop? Enter your e-mail (Optional):</label>
-									<input id="email" type="email" class="form-control" name="email" placeholder="e.g. foffythefoff@gmail.com" maxlength="64" required/><br> -->
-
 									<!-- Loading alert -->
 									<div id="alert-loading" class="alert alert-info alert-hide"><img src="data/img/loading.gif"/> Dropping requested beat...hold on a second.</div>
 
@@ -154,7 +148,7 @@ EOT;
 									<div id="alert-failure" class="alert alert-danger alert-hide">Something went wrong, but we're not sure what. Try again later...we'll have it fixed by then. Promise.</div>
 
 									<!-- Drop that beat! -->
-									<button id="drop-beat" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-fire"></span>&nbsp; Drop that beat!</button>
+									<button id="drop-beat" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-cloud-uplad"></span> Add your song!</button>
 								</div>
 							</div>
 						</div>

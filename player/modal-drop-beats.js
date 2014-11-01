@@ -16,6 +16,7 @@ function dropBeat()
 	message = $('#drop-beats-message').val();
 	signUp = true;
 	email = null;
+	label = $('#drop-beats-label').val();
 
 	message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
@@ -34,7 +35,8 @@ function dropBeat()
 			youtubeUrl:url,
 			message:message,
 			signUp:signUp,
-			emailAddress:email
+			emailAddress:email,
+			labelId:label
 		},
 		success: function(data)
 		{
@@ -46,6 +48,7 @@ function dropBeat()
 				//On success, clear out all the fields and re-focus the first text box so you can enter a new song right away
 				$('#drop-beats-url').val('');
 				$('#drop-beats-message').val('');
+				$('#drop-beats-label').val(0);
 				$('#drop-beats-message').trigger('keypress');
 				$('#drop-beats-url').focus();
 				$('#drop-beats-alert-success').show();
@@ -66,8 +69,6 @@ function dropBeat()
 				var errorMessage = data['message'];
 				$('#drop-beats-alert-failure').html(errorMessage).show();
 			}
-
-			$('#drop-beat').prop('disabled', false);
 		},
 		error: function(err)
 		{
@@ -123,6 +124,7 @@ $(document).on('click', '#foffbox-player-drop', function(event){
 	$('#drop-beats-alert-success').hide();
 	$('#drop-beats-alert-failure').hide();
 	$('#drop-beats-message, #drop-beats-url').val('');
+	$('#drop-beats-label').val(0);
 	$('#drop-beats-message').trigger('keypress');
 });
 
