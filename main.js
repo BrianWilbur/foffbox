@@ -151,6 +151,7 @@ function initializeDropBeats()
 			message = $('#message').val();
 			signUp = true;
 			email = $('#email').val();
+			label = $('#label').val();
 
 			message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
 			
@@ -169,7 +170,8 @@ function initializeDropBeats()
 					youtubeUrl:url,
 					message:message,
 					signUp:signUp,
-					emailAddress:email
+					emailAddress:email,
+					labelId:label
 				},
 				success: function(data)
 				{

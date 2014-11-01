@@ -116,17 +116,20 @@ Go home. You are drunk.
 										
 											if (!empty($labelResults))
 											{
-												echo('<label for="label">How would you label this song? (Optional)</label>');
-												echo('<select id="label" class="form-control" name="label">');
-												echo('<option value="0"></option>');
-												
-												foreach ($labelResults as $labelResult)
-												{
-													$id = $labelResult['id'];
-													$name = $labelResult['name'];
-													
-													echo("<option value=\"$id\">$name</option>");
-												}
+												echo<<<EOT
+												<label for="label">How would you label this song? (Optional)</label>
+												<select id="label" class="form-control" name="label">
+													<option value="0">Let others label it for me</option>
+													<optgroup label="----------"></optgroup>
+EOT;
+
+													foreach ($labelResults as $labelResult)
+													{
+														$id = $labelResult['id'];
+														$name = $labelResult['name'];
+														
+														echo("<option value=\"$id\">$name</option>");
+													}
 												
 												echo('</select><br>');
 											}

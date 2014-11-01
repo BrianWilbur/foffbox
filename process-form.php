@@ -18,6 +18,7 @@ function validateData()
 	$message = strip_tags(trim($_POST['message']), "<br>");
 	$message = str_replace("\"", "&quot;", $message);
 	$signUp = $_POST['signUp'];
+	$labelId = $_POST['labelId'];
 	
 	$emailAddress = '';
 	if (!empty($_POST['emailAddress']))
@@ -138,14 +139,31 @@ function validateData()
 	$sqlStatement->bindValue(":youtubeUrl", $strippedUrl);
 	$sqlStatement->bindValue(":message", $message);
 	$sqlStatement->bindValue(":ipAddress", $ipAddress);
-	
-	try
-	{
-		$sqlStatement->execute();
-	}
+	try { $sqlStatement->execute(); }
 	catch (\Exception $error)
 	{
-		//We don't really care if this one happens
+		echo(json_encode(array('success' => false, 'message' => "Something went wrong, and we're not quite sure what. Please try again later.")));
+		return;
+	}
+	
+	$lastInsertId = $pdo->lastInsertId();
+	
+	//Insert the label (if any) into the archiveLabels directory alon with the user's IP Address
+	$sqlStatement = $pdo->prepare("
+		INSERT INTO `submissions_archiveLabels`
+			(`submissionsArchiveId`, `submissionsLabelId`, `ipAddress`)
+		VALUES
+			(:songId, :labelId, :ipAddress)
+		ON DUPLICATE KEY UPDATE
+			`submissionsLabelId` = :labelId;
+	");
+	$sqlStatement->bindValue(':songId', $lastInsertId);
+	$sqlStatement->bindValue(':labelId', $labelId);
+	$sqlStatement->bindValue(':ipAddress', $ipAddress);
+	try { $sqlStatement->execute(); }
+	catch (\Exception $e)
+	{
+		//We don't care if this happens, they can just label it later
 	}
 	
 	//Commit e-mail address to the "I want a digest" DB if necessary
