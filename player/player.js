@@ -119,6 +119,7 @@ function getSongTitle(vidId)
 		vidTitle = vidTitle.replace('  ', ' ');
 		
 		$('#title-ticker-inner').html(vidTitle);
+		$('#title-ticker-loading').hide();
 		titleWidth = $('#title-ticker-inner').width();
 		console.log(titleWidth);
 		
@@ -322,7 +323,8 @@ function requestNewSong(requestId)
 		container: 'body'
 	});
 	
-	$('#title-ticker-inner').html('<img src="img/loading.gif"/>');
+	$('#title-ticker-inner').html('');
+	$('#title-ticker-loading').show();
 	
 	//Ping DB and ask for a video
 	$.ajax({
@@ -533,6 +535,7 @@ function fixTicker()
 	var rightBeginning = parentWidth - rightWidth;
 	
 	//Add some buffer for the ticker so it "goes beneath" the buttons
+	$('#title-ticker').css('left', (tickerLeft - titleWidth) + 'px');
 	$('#title-ticker').width(tickerWidth);
 	
 	function marqueePlay(){
