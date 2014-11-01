@@ -281,6 +281,8 @@ function renderLabels(labels)
 			$('#comment-labels').append('<a class="comment-label label label-' + classString + '" labelId="' + labelId + '" style="display: inline-block !important;">' + labelName + '</a> ');
 		}
 	}
+	
+	$('#comment-labels').append('');
 }
 
 /*
@@ -593,7 +595,7 @@ $(document).on('click', '#foffbox-player-comments', function(event){
 	else
 	{
 		commentAreaOpen = true;
-		$('#foffbox-player-right').animate({left: '75%'}, 500);
+		$('#foffbox-player-right').animate({left: '70%'}, 500);
 	}
 });
 

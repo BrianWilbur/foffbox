@@ -96,12 +96,43 @@ Go home. You are drunk.
 								<div class="col-md-12">
 
 									<!-- Youtube URL -->
-									<label for="drop-beats-url">Drop your Youtube URL:</strong></label> <span id="suggestion" class="pull-right field-subtext" data-toggle="tooltip" title="Hello world!">Need a suggestion? <span class="glyphicon glyphicon-question-sign"></span></span>
+									<label for="drop-beats-url">Youtube URL:</strong></label> <span id="suggestion" class="pull-right field-subtext" data-toggle="tooltip" title="Hello world!">Need a suggestion? <span class="glyphicon glyphicon-question-sign"></span></span>
 									<input id="drop-beats-url" type="text" class="form-control" name="youtubeUrl" placeholder="e.g. youtube.com/watch?v=ZZ5LpwO-An4" maxlength="64" pattern="((https:\/\/)|(http:\/\/))?((m.)|(www.))?(youtube.com\/watch\?v=)([a-zA-Z0-9\-\_]){9,12}" required /><br>
 
 									<!-- Message -->
 									<label for="message">Include a message:</label> <span id="message-remaining" class="pull-right field-subtext">500 remaining</span>
 									<textarea id="message" type="text" class="form-control" name="messageBox" placeholder="Your own special touch." maxlength="500" rows="3" required></textarea><br>
+									
+
+									
+										<?php
+											$configMode = 'live';
+											$connectionData = require_once("server-config.php");
+											$connectionData = $connectionData[$configMode];
+											$pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
+											$sqlStatement = $pdo->prepare("SELECT `id`, `name` FROM `submissions_labels` WHERE `active` = 1");
+											$sqlStatement->execute();
+											$labelResults = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+										
+											if (!empty($labelResults))
+											{
+												echo('<label for="label">How would you label this song? (Optional)</label>');
+												echo('<select id="label" class="form-control" name="label">');
+												echo('<option value="0"></option>');
+												
+												foreach ($labelResults as $labelResult)
+												{
+													$id = $labelResult['id'];
+													$name = $labelResult['name'];
+													
+													echo("<option value=\"$id\">$name</option>");
+												}
+												
+												echo('</select><br>');
+											}
+										?>
+									
+									</select>
 
 									<!-- Email address
 									<label for="email">Wanna hear when new beats drop? Enter your e-mail (Optional):</label>
