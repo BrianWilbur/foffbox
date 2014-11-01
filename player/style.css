@@ -120,9 +120,14 @@ html
 }
 
 /* Comment labels */
+.comment-label.label-default
+{
+	opacity: 0.55;
+}
 .comment-label.label-default:hover
 {
 	background-color: #5bc0de !important;
+	opacity: 1.0;
 }
 
 /* Foffbox Player "Drop Beats" dialog */

@@ -339,8 +339,6 @@ function requestNewSong(requestId)
 		
 			if (data['success'])
 			{
-				console.log(data);
-			
 				//Load up the appropriate video
 				var songUrl = data['submissionUrl'];
 				var newUrl = songUrl.replace("watch?v=", "embed/");
