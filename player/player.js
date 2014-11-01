@@ -307,7 +307,7 @@ function requestNewSong(requestId)
 		container: 'body'
 	});
 	
-	//Ping DB and ask for 10 videos
+	//Ping DB and ask for a video
 	$.ajax({
 		type: 'POST',
 		url: 'request-song.php',
@@ -345,7 +345,8 @@ function requestNewSong(requestId)
 				//Set up footer
 				var songId = data['submissionId'];
 				var songDate = data['submissionDate'];
-				$('#foffbox-player-quote footer').html("#" + songId + ", Dropped on " + songDate);
+				var songViews = data['views'];
+				$('#foffbox-player-quote footer').html(songViews + " views. Dropped on " + songDate + ".");
 
 				//Some last-minute cleanup, then show the goods!
 				$('#loading').hide();
@@ -527,11 +528,6 @@ $(document).on('click', '#foffbox-player-last', function(event) {
 	requestNewSong(maxId);
 });
 
-/* When the user clicks the "submit comment" button, drop a comment */
-$(document).on('click', '#submit-comment', function(event){
-	dropComment();
-});
-
 /* Open/close the comments view */
 $(document).on('click', '#foffbox-player-comments', function(event){
 	if (commentAreaOpen)
@@ -542,6 +538,11 @@ $(document).on('click', '#foffbox-player-comments', function(event){
 	{
 		$('#foffbox-player-right').animate({left: '75%'}, 500, function() { commentAreaOpen = true; });
 	}
+});
+
+/* When the user clicks the "submit comment" button, drop a comment */
+$(document).on('click', '#submit-comment', function(event){
+	dropComment();
 });
 
 /* Update tooltip as request slider is moved */
