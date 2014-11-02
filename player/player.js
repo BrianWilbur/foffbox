@@ -264,21 +264,21 @@ function initializeFilters()
 	//If the given label is actually valid, push/pop it from the stack on click
 	$(document).on('click', '.filter-label', function(event){
 		var labelId = $(this).attr('labelId');
-		console.log(labelId);
 		
 		if (labelId)
 		{
-			if ($.inArray(labelId, labelFilterIds))
+			if ($.inArray(labelId, labelFilterIds) > -1)
 			{
-				console.log("Yo");
-				if ($.inArray(labelId, selectedLabelFilters))
+				if ($.inArray(labelId, selectedLabelFilters) > -1)
 				{
+					console.log("It was in the array");
 					selectedLabelFilters.splice(selectedLabelFilters.indexOf(labelId), 1);
 					$(this).removeClass('btn-primary');
 					$(this).addClass('btn-default');
 				}
 				else
 				{
+					console.log("It was not in the array");
 					selectedLabelFilters.push(labelId);
 					$(this).addClass('btn-primary');
 					$(this).removeClass('btn-default');
@@ -384,7 +384,7 @@ function requestNewSong(requestId)
 	//If they haven't selected any filters, they must choose some
 	if (selectedLabelFilters.length <= 0)
 	{
-		selectedLabelFilters = labelFilterIds;
+		selectedLabelFilters = labelFilterIds.slice(0);
 	}
 	
 	$('.foffbox-player-button').attr('disabled', false);
