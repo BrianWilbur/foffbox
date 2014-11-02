@@ -115,6 +115,9 @@ function initializeValidation()
 			email: {
 				required: false,
 				email: true
+			},
+			label: {
+				required: true
 			}
 		},
 		messages: {
@@ -129,6 +132,9 @@ function initializeValidation()
 			email: {
 				required: "You forgot to enter an e-mail address!",
 				email: "That ain't no e-mail address."
+			},
+			label: {
+				required: "Gotta put a label on it, baby!"
 			}
 		}
 	});

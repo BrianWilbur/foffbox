@@ -115,10 +115,9 @@ Go home. You are drunk.
 											if (!empty($labelResults))
 											{
 												echo<<<EOT
-												<label for="label">How would you label this song? (Optional)</label>
-												<select id="label" class="form-control" name="label">
-													<option value="0">Let others label it for me</option>
-													<optgroup label="----------"></optgroup>
+												<label for="label">How would you describe this song?</label>
+												<select id="label" class="form-control" name="label" required>
+													<option value=""></option>
 EOT;
 
 													foreach ($labelResults as $labelResult)

@@ -158,12 +158,12 @@ html
 {
 	margin-right: 8px;
 }
-#drop-beats-url-error, #message-error, #email-error
+#drop-beats-url-error, #message-error, #email-error, #label-error
 {
 	color: #DB5353;
 	margin-top:3px;
 }
-#drop-beats-url-error, #email-error, #message-error
+#drop-beats-url-error, #email-error, #message-error, #label-error
 {
 	margin-bottom:15px;
 }

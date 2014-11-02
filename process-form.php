@@ -78,6 +78,12 @@ function validateData()
 		}
 	}
 	
+	if (empty($labelId))
+	{
+		echo (json_encode(array('success' => false, 'message' => "Gotta put a label on it, baby!")));
+		return;
+	}
+	
 	//Commit Youtube URL & Message to one DB table
 	$configMode = 'live';
 	$connectionData = require_once("server-config.php");
