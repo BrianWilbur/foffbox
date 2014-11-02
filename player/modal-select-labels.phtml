@@ -26,6 +26,10 @@
 					$connectionData = $connectionData['live'];
 
 					$pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
+					
+					$sqlStatement = $pdo->prepare("CALL getLabelRowCounts();");
+					$sqlStatement->execute();
+					$sqlStatement->closeCursor();
 
 					$sqlStatement = $pdo->prepare("SELECT * FROM `submissions_labelCounts`;");
 					$sqlStatement->execute();
