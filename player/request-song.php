@@ -1,9 +1,10 @@
 <?php
 
 $requestId = intval($_POST['requestId']);
+$newBeats = $_POST['newBeats'] === 'false' ? false : true;
 $labelIds = json_decode($_POST['labelIds']);
 
-if (empty($labelIds))
+if (empty($labelIds) && empty($newBeats))
 {
 	echo(json_encode(array('success' => false, 'message' => "No filters were selected!")));
 	return;
@@ -18,30 +19,42 @@ $pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionD
 //Get highest ID in DB (so we know what our rand range is)
 $inStatement = implode(', ', array_fill(0, count($labelIds), '?'));
 
-$sqlStatement = $pdo->prepare("
-	SELECT
-		`submissions_archive`.`id`,
-		`submissions_archive`.`youtubeUrl`,
-		`submissions_archive`.`message`,
-		`submissions_archive`.`views`,
-		`submissions_archiveLabels`.`submissionsLabelId`,
-		`submissions_archive`.`dateSubmitted`
-	FROM `submissions_archive`
-	JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
-	GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
-	HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
-	ORDER BY `submissions_archive`.`id` DESC
-	LIMIT 1;
-");
-
-$i = 1;
-for ($j = 0; $j < 2; $j++)
+if (empty($newBeats))
 {
-	foreach ($labelIds as $labelId)
+	$sqlStatement = $pdo->prepare("
+		SELECT
+			`submissions_archive`.`id`,
+			`submissions_archive`.`youtubeUrl`,
+			`submissions_archive`.`message`,
+			`submissions_archive`.`views`,
+			`submissions_archiveLabels`.`submissionsLabelId`,
+			`submissions_archive`.`dateSubmitted`
+		FROM `submissions_archive`
+		JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+		GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+		HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+		ORDER BY `submissions_archive`.`id` DESC
+		LIMIT 1;
+	");
+
+	$i = 1;
+	for ($j = 0; $j < 2; $j++)
 	{
-		$sqlStatement->bindValue($i, $labelId);
-		$i++;
+		foreach ($labelIds as $labelId)
+		{
+			$sqlStatement->bindValue($i, $labelId);
+			$i++;
+		}
 	}
+}
+else
+{
+	$sqlStatement = $pdo->prepare("
+		SELECT * FROM `submissions_archive`
+		WHERE `dateSubmitted` BETWEEN date_sub(now(), INTERVAL 1 WEEK) and now()
+		ORDER BY `id` DESC
+		LIMIT 1;
+	");
 }
 
 $sqlStatement->execute();
@@ -70,33 +83,46 @@ else if ($requestId > $maxId)
 }
 
 //Now choose a video based on the input request ID. We account for invalid/nonexistent IDs here.
-$sqlStatement = $pdo->prepare("
-	SELECT
-		`submissions_archive`.`id` as `id`,
-		`submissions_archive`.`youtubeUrl`,
-		`submissions_archive`.`message`,
-		`submissions_archive`.`views`,
-		`submissions_archive`.`dateSubmitted`
-	FROM `submissions_archive`
-	JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
-	WHERE `submissions_archive`.`id` >= ?
-	GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
-	HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
-	ORDER BY `submissions_archive`.`id` ASC
-	LIMIT 1;
-");
-
-$boundParamsInOrder = array();
-
-$i = 1;
-$sqlStatement->bindValue($i, $requestId); $i++;
-for ($j = 0; $j < 2; $j++)
+if (empty($newBeats))
 {
-	foreach ($labelIds as $labelId)
+	$sqlStatement = $pdo->prepare("
+		SELECT
+			`submissions_archive`.`id` as `id`,
+			`submissions_archive`.`youtubeUrl`,
+			`submissions_archive`.`message`,
+			`submissions_archive`.`views`,
+			`submissions_archive`.`dateSubmitted`
+		FROM `submissions_archive`
+		JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+		WHERE `submissions_archive`.`id` >= ?
+		GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+		HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+		ORDER BY `submissions_archive`.`id` ASC
+		LIMIT 1;
+	");
+
+	$boundParamsInOrder = array();
+
+	$i = 1;
+	$sqlStatement->bindValue($i, $requestId); $i++;
+	for ($j = 0; $j < 2; $j++)
 	{
-		$sqlStatement->bindValue($i, $labelId);
-		$i++;
+		foreach ($labelIds as $labelId)
+		{
+			$sqlStatement->bindValue($i, $labelId);
+			$i++;
+		}
 	}
+}
+else
+{
+	$sqlStatement = $pdo->prepare("
+		SELECT * FROM `submissions_archive`
+		WHERE `id` >= :requestId AND `dateSubmitted` BETWEEN date_sub(now(), INTERVAL 1 WEEK) and now()
+		ORDER BY `id` ASC
+		LIMIT 1;
+	");
+	$sqlStatement->bindValue(':requestId', $requestId);
 }
 
 $sqlStatement->execute();
@@ -124,29 +150,43 @@ $sqlStatement->bindValue(':id', $retrievedId);
 $sqlStatement->execute();
 
 //Get next lowest ID
-$sqlStatement = $pdo->prepare("
-	SELECT `submissions_archive`.`id` as `id`
-	FROM `submissions_archive`
-	JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
-	WHERE `submissions_archive`.`id` < ?
-	GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
-	HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
-	ORDER BY `submissions_archive`.`id` DESC
-	LIMIT 1;
-");
-
-$i = 1;
-$sqlStatement->bindValue($i, $retrievedId);
-
-$i++;
-for ($j = 0; $j < 2; $j++)
+if (empty($newBeats))
 {
-	foreach ($labelIds as $labelId)
+	$sqlStatement = $pdo->prepare("
+		SELECT `submissions_archive`.`id` as `id`
+		FROM `submissions_archive`
+		JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+		WHERE `submissions_archive`.`id` < ?
+		GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+		HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+		ORDER BY `submissions_archive`.`id` DESC
+		LIMIT 1;
+	");
+
+	$i = 1;
+	$sqlStatement->bindValue($i, $retrievedId);
+
+	$i++;
+	for ($j = 0; $j < 2; $j++)
 	{
-		$sqlStatement->bindValue($i, $labelId);
-		$i++;
+		foreach ($labelIds as $labelId)
+		{
+			$sqlStatement->bindValue($i, $labelId);
+			$i++;
+		}
 	}
 }
+else
+{
+	$sqlStatement = $pdo->prepare("
+		SELECT `id` FROM `submissions_archive`
+		WHERE `submissions_archive`.`id` < :requestId AND `dateSubmitted` BETWEEN date_sub(now(), INTERVAL 1 WEEK) and now()
+		ORDER BY `submissions_archive`.`id` DESC
+		LIMIT 1;
+	");
+	$sqlStatement->bindValue(':requestId', $retrievedId);
+}
+
 $sqlStatement->execute();
 $resultNextLowest = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
 

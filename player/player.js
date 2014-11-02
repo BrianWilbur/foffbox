@@ -1,34 +1,29 @@
+//Seek variables
 var previousId = 0;
 var currentId = 0;
 var maxId = 0;
-var reported = false;
-var vidTitle = '';
-var aspectRatio = '';
 
-var show_video = false;
-
-var quality = "medium";
+//Initialization variables for various popovers/divs
+var tickerInitialized = false;
 var qualityPopoverTextSet = false;
 var volumePopoverTextSet = false;
-var labelPopoverTextSet = false;
-var labelSelectAll = true;
 var commentAreaOpen = false;
-
-var tickerInitialized = false;
-
-var volume = 50;
 
 //Labels currently included in the song queue
 var labelFilterIds = new Array();
 var selectedLabelFilters = new Array();
-var noSelectedFilters = true;
+var newBeats = false;
 
 //Turn on autoplay automatically on first play
 var playerStopped = true;
 
 //Play modes
+var vidTitle = '';
+var quality = "medium";
 var shuffle = false;
 var autoplay = false;
+var volume = 50;
+var reported = false;
 
 (function($) {
     $.fn.hasScrollBar = function() {
@@ -253,35 +248,64 @@ function initializePopover()
 function initializeFilters()
 {
 	//Give it a "mouseover" class on hover and remove it on mouseout
-	$(document).on('mouseover', '.filter-label, #labelNewAndUnreleased', function(event){
-		$(this).addClass('btn-info');
+	$(document).on('mouseover', '.filter-label, #filter-label-new', function(event){
+		if (!newBeats)
+		{
+			$(this).addClass('btn-info');
+		}
 	});
 	
-	$(document).on('mouseout', '.filter-label, #labelNewAndUnreleased', function(event){
-		$(this).removeClass('btn-info');
+	$(document).on('mouseout', '.filter-label, #filter-label-new', function(event){
+		if (!newBeats)
+		{
+			$(this).removeClass('btn-info');
+		}
 	});
 
 	//If the given label is actually valid, push/pop it from the stack on click
 	$(document).on('click', '.filter-label', function(event){
 		var labelId = $(this).attr('labelId');
 		
-		if (labelId)
+		if (!newBeats)
 		{
-			if ($.inArray(labelId, labelFilterIds) > -1)
+			if (labelId)
 			{
-				if ($.inArray(labelId, selectedLabelFilters) > -1)
+				if ($.inArray(labelId, labelFilterIds) > -1)
 				{
-					selectedLabelFilters.splice(selectedLabelFilters.indexOf(labelId), 1);
-					$(this).removeClass('btn-primary');
-					$(this).addClass('btn-default');
-				}
-				else
-				{
-					selectedLabelFilters.push(labelId);
-					$(this).addClass('btn-primary');
-					$(this).removeClass('btn-default');
+					if ($.inArray(labelId, selectedLabelFilters) > -1)
+					{
+						selectedLabelFilters.splice(selectedLabelFilters.indexOf(labelId), 1);
+						$(this).removeClass('btn-primary');
+						$(this).addClass('btn-default');
+					}
+					else
+					{
+						selectedLabelFilters.push(labelId);
+						$(this).addClass('btn-primary');
+						$(this).removeClass('btn-default');
+					}
 				}
 			}
+		}
+	});
+	
+	//Turn on/off the "New" setting
+	$(document).on('click', '#filter-label-new', function(event){
+	
+		if (newBeats)
+		{
+			$('.filter-label').css('opacity', '1');
+			$(this).removeClass('btn-primary');
+			$(this).addClass('btn-default');
+			newBeats = false;
+		}
+		else
+		{
+			$('.filter-label.btn-primary').trigger('click');
+			$('.filter-label').css('opacity', '0.25');
+			$(this).addClass('btn-primary');
+			$(this).removeClass('btn-default');
+			newBeats = true;
 		}
 	});
 }
@@ -400,7 +424,8 @@ function requestNewSong(requestId)
 		data:
 		{
 			requestId:requestId,
-			labelIds:JSON.stringify(selectedLabelFilters)
+			labelIds:JSON.stringify(selectedLabelFilters),
+			newBeats:newBeats
 		},
 		success: function(data)
 		{
