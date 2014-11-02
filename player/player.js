@@ -231,27 +231,14 @@ function initializePopover()
 	});
 	
 	$('#foffbox-player-labels').on('click', function(event){
-	
-		if (selectedLabelFilters.length <= 0)
-		{
-			$.ajax({
-				type: 'GET',
-				url: 'get-labels.php',
-				dataType: 'json',
-				success: function(data)
-				{
-					renderLabels(data['labels']);
-					$('#foffbox-player-labels').popover('toggle');
-				}
-			});
-		}
-		else
-		{
-			$('#foffbox-player-labels').popover('toggle');
-		}
-		
+		$('#foffbox-player-labels').popover('toggle');
 		$('#foffbox-player-quality').popover('hide');
 		$('#foffbox-player-volume').popover('hide');
+		
+		configureSelectAllButton();
+		
+		$('#foffbox-player-labels').stop();
+		$('#foffbox-player-labels').css('color', '#555');
 	});
 
 	$(document).on('click', '.popover-row', function(event)
@@ -329,8 +316,9 @@ function renderLabels(labels)
 			
 			$('#comment-labels').append('<a class="comment-label label label-' + classString + '" labelId="' + labelId + '" style="display: inline-block !important;">' + labelName + '</a> ');
 			
-			var popoverClassString = $.inArray(labelId, selectedLabelFilters) > -1 ? 'primary' : 'default';
-			labelPopoverContent += '<div class="filter-label label label-' + popoverClassString + '" labelId="' + labelId + '">' + labelName + '</div>';
+			var labelPopoverString = $.inArray(labelId, selectedLabelFilters) > -1 ? 'primary' : 'default';
+			var newString = '<div class="filter-label label label-' + labelPopoverString + '" labelId="' + labelId + '">' + labelName + '</div>';
+			labelPopoverContent += newString;
 		}
 	}
 	
@@ -388,39 +376,48 @@ function requestNewSong(requestId)
 		$('.foffbox-player-button').attr('disabled', true);
 		$('#foffbox-player-labels').attr('disabled', false);
 		$('#title-ticker-inner').html('');
-		
-		function emphasizeButton()
-		{
-			$('#foffbox-player-labels').animate({
-				color: '#D00000'
-			},
-			1000,
-			function() {
-				return deEmphasizeButton();
-			});
-		}
-		
-		function deEmphasizeButton()
-		{
-			$('#foffbox-player-labels').animate({
-				color: '#F26F6F'
-			},
-			1000,
-			function() {
-				return emphasizeButton();
-			});
-		}
-		
-		emphasizeButton();
+
 		noSelectedFilters = true;
 
-		$('#loading').html('Please select what type of music you\'d like to listen to by using the "Filters" button below.');
+		$('#loading').hide();
 		$('#title-ticker-loading').hide('');
+		
+		$.ajax({
+			type: 'GET',
+			url: 'get-labels.php',
+			dataType: 'json',
+			success: function(data)
+			{
+				for (var i = 0; i < data['labels'].length; i++)
+				{
+					selectedLabelFilters.push(data['labels'][i]['id']);
+				}
+				renderLabels(data['labels']);
+				
+				//If they have a URL already in their hash, go to that ID. Otherwise, request a new (random) song.
+				var windowHash = window.location.hash;
+				windowHash = windowHash.replace('#', '');
+				
+				var validHash = false;
+				if (windowHash)
+				{
+					if (!isNaN(windowHash))
+					{
+						requestNewSong(windowHash);
+						validHash = true;
+					}
+					else
+					{
+						requestNewSong(0);
+					}
+				}
+				else
+				{
+					requestNewSong(0);
+				}
+			}
+		});
 		return;
-	}
-	else
-	{
-		$('#foffbox-player-labels').stop();
 	}
 	
 	$('.foffbox-player-button').attr('disabled', false);
@@ -653,6 +650,33 @@ function fixTicker()
 	marqueePlay();
 }
 
+/* Determines the current state of the Select/Deselect All button */
+function configureSelectAllButton()
+{
+	var allSelected = true;
+	$('.filter-label').each(function(){
+		if (!$(this).hasClass('label-primary'))
+		{
+			allSelected = false;
+		}
+	});
+	
+	if (allSelected == true)
+	{
+		labelSelectAll = false;
+		$('#filter-label-select-all').html('Deselect All');
+		$('#filter-label-select-all').removeClass('label-success');
+		$('#filter-label-select-all').addClass('label-warning');
+	}
+	else
+	{
+		labelSelectAll = true;
+		$('#filter-label-select-all').html('Select All');
+		$('#filter-label-select-all').removeClass('label-warning');
+		$('#filter-label-select-all').addClass('label-success');
+	}
+}
+
 /* Let the user select different labels */
 $(document).on('click', '.comment-label', function(event){
 
@@ -697,40 +721,7 @@ $(document).on('click', '.filter-label', function(event){
 		$(this).removeClass('label-default');
 		$(this).addClass('label-primary');
 	}
-	
-	if (selectedLabelFilters.length > 0 && noSelectedFilters)
-	{
-		noSelectedFilters = false;
-		$('#toolbar-left .foffbox-player-button').attr('disabled', false);
-		$('#loading').html('Right on. Now, request a song using the "Next" button.');
-		$('#foffbox-player-labels').css('color', '#555');
-		$('#foffbox-player-labels').stop();
-	}
-	
-	var allSelected = true;
-	$('.filter-label').each(function(){
-		if (!$(this).hasClass('label-primary'))
-		{
-			allSelected = false;
-		}
-	});
-	
-	if (allSelected == true)
-	{
-		labelSelectAll = false;
-		$('#filter-label-select-all').html('Deselect All');
-		$('#filter-label-select-all').removeClass('label-success');
-		$('#filter-label-select-all').addClass('label-warning');
-	}
-	else
-	{
-		labelSelectAll = true;
-		$('#filter-label-select-all').html('Select All');
-		$('#filter-label-select-all').removeClass('label-warning');
-		$('#filter-label-select-all').addClass('label-success');
-	}
-	
-	labelPopoverContent = $(this).closest('.popover-content').html();
+	configureSelectAllButton()
 });
 
 /* When the "First" button is clicked, go back to the first song */
@@ -827,6 +818,7 @@ $(document).on('mousemove', '#volume-slider', function(event){
 	volumePopoverContent = $(this).closest('.popover-content').html();
 });
 
+/* Select/deselect all choices */
 $(document).on('click', '#filter-label-select-all', function(event){
 
 	if (labelSelectAll)
@@ -879,11 +871,58 @@ $(document).on('ready', function(){
 	
 	//Shuffle by default
 	$('#foffbox-player-shuffle').trigger('click');
-	$('#foffbox-player-autoplay').trigger('click');
 	
 	//Initialize tooltips for the controls @ the bottom of the screen
 	$('.foffbox-player-button').tooltip({
 		container: 'body',
 		placement: 'top'
 	});
+	
+	//Put emphasis on "Filters" button
+	function emphasizeButton()
+	{
+		$('#foffbox-player-labels').animate({
+			color: '#D00000'
+		},
+		1000,
+		function() {
+			return deEmphasizeButton();
+		});
+	}
+	
+	function deEmphasizeButton()
+	{
+		$('#foffbox-player-labels').animate({
+			color: '#F26F6F'
+		},
+		1000,
+		function() {
+			return emphasizeButton();
+		});
+	}
+	
+	function emphasizeDropButton()
+	{
+		$('#foffbox-player-drop').animate({
+			color: '#17ADE8'
+		},
+		1000,
+		function() {
+			return deEmphasizeDropButton();
+		});
+	}
+	
+	function deEmphasizeDropButton()
+	{
+		$('#foffbox-player-drop').animate({
+			color: '#7AD2F5'
+		},
+		1000,
+		function() {
+			return emphasizeDropButton();
+		});
+	}
+	
+	emphasizeButton();
+	emphasizeDropButton();
 });

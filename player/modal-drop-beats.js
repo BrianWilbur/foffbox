@@ -128,6 +128,9 @@ $(document).on('click', '#foffbox-player-drop', function(event){
 	$('#drop-beats-message, #drop-beats-url').val('');
 	$('#drop-beats-label').val(0);
 	$('#drop-beats-message').trigger('keypress');
+	
+	$('#foffbox-player-drop').stop();
+	$('#foffbox-player-drop').css('color', '#555');
 });
 
 /* Called when the modal is finished loading/being shown */
