@@ -404,7 +404,7 @@ function requestNewSong(requestId)
 	$('#title-ticker-loading').show();
 	
 	//If they haven't selected any filters, they must choose some
-	if (selectedLabelFilters.length <= 0)
+	if (selectedLabelFilters.length <= 0 && !newBeats)
 	{
 		selectedLabelFilters = labelFilterIds.slice(0);
 		

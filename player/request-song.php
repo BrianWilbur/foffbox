@@ -16,11 +16,11 @@ $connectionData = require_once("../server-config.php");
 $connectionData = $connectionData[$configMode];
 $pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
 
-//Get highest ID in DB (so we know what our rand range is)
-$inStatement = implode(', ', array_fill(0, count($labelIds), '?'));
-
 if (empty($newBeats))
 {
+	//Get highest ID in DB (so we know what our rand range is)
+	$inStatement = implode(', ', array_fill(0, count($labelIds), '?'));
+
 	$sqlStatement = $pdo->prepare("
 		SELECT
 			`submissions_archive`.`id`,
@@ -69,10 +69,55 @@ if (empty($results))
 $result = $results[0];
 $maxId = $result['id'];
 
+if (empty($newBeats))
+{
+	//Get lowest ID in DB (so we know the bottom bound of our rand range)
+	$sqlStatement = $pdo->prepare("
+		SELECT `submissions_archive`.`id`
+		FROM `submissions_archive`
+		JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+		GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+		HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+		ORDER BY `submissions_archive`.`id` ASC
+		LIMIT 1;
+	");
+
+	$i = 1;
+	for ($j = 0; $j < 2; $j++)
+	{
+		foreach ($labelIds as $labelId)
+		{
+			$sqlStatement->bindValue($i, $labelId);
+			$i++;
+		}
+	}
+}
+else
+{
+	$sqlStatement = $pdo->prepare("
+		SELECT `id` FROM `submissions_archive`
+		WHERE `dateSubmitted` BETWEEN date_sub(now(), INTERVAL 1 WEEK) and now()
+		ORDER BY `id` ASC
+		LIMIT 1;
+	");
+}
+
+$sqlStatement->execute();
+$results = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+
+if (empty($results))
+{
+	echo(json_encode(array('success' => false, 'message' => "Bummer. No videos were found. E1005")));
+	return;
+}
+
+$result = $results[0];
+$minId = $result['id'];
+
 //If the requested ID is less then 0, give them a random one.
 if ($requestId < 0)
 {
-	$requestId = rand(1, $maxId);
+	$requestId = rand($minId, $maxId);
 }
 
 //If the requested ID is greater than the max ID (i.e. they're trying to advance past the end), reset them to the beginning.
