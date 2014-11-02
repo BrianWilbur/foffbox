@@ -271,14 +271,12 @@ function initializeFilters()
 			{
 				if ($.inArray(labelId, selectedLabelFilters) > -1)
 				{
-					console.log("It was in the array");
 					selectedLabelFilters.splice(selectedLabelFilters.indexOf(labelId), 1);
 					$(this).removeClass('btn-primary');
 					$(this).addClass('btn-default');
 				}
 				else
 				{
-					console.log("It was not in the array");
 					selectedLabelFilters.push(labelId);
 					$(this).addClass('btn-primary');
 					$(this).removeClass('btn-default');
@@ -385,6 +383,11 @@ function requestNewSong(requestId)
 	if (selectedLabelFilters.length <= 0)
 	{
 		selectedLabelFilters = labelFilterIds.slice(0);
+		
+		$('.filter-label').each(function(event){
+			$(this).removeClass('btn-default');
+			$(this).addClass('btn-primary');
+		});
 	}
 	
 	$('.foffbox-player-button').attr('disabled', false);
