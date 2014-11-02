@@ -39,7 +39,7 @@
 	display: none !important;
 }
 
-.filter-label
+.filter-label, #filter-label-select-all
 {
 	cursor: pointer;
 	display: block;

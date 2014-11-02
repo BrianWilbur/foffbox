@@ -11,6 +11,7 @@ var quality = "medium";
 var qualityPopoverTextSet = false;
 var volumePopoverTextSet = false;
 var labelPopoverTextSet = false;
+var labelSelectAll = true;
 var commentAreaOpen = false;
 
 var tickerInitialized = false;
@@ -315,7 +316,7 @@ function renderComments(comments)
 function renderLabels(labels)
 {
 	$('#comment-labels').html('');
-	labelPopoverContent = '<div id="filter-label-select-all" class="filter-label label label-primary">Select All</div>';
+	labelPopoverContent = '<div id="filter-label-select-all" class="label label-success">Select All</div>';
 	
 	if (labels.length > 0)
 	{
@@ -693,6 +694,7 @@ $(document).on('click', '.filter-label', function(event){
 	else
 	{
 		selectedLabelFilters.push(thisId);
+		$(this).removeClass('label-default');
 		$(this).addClass('label-primary');
 	}
 	
@@ -703,6 +705,29 @@ $(document).on('click', '.filter-label', function(event){
 		$('#loading').html('Right on. Now, request a song using the "Next" button.');
 		$('#foffbox-player-labels').css('color', '#555');
 		$('#foffbox-player-labels').stop();
+	}
+	
+	var allSelected = true;
+	$('.filter-label').each(function(){
+		if (!$(this).hasClass('label-primary'))
+		{
+			allSelected = false;
+		}
+	});
+	
+	if (allSelected == true)
+	{
+		labelSelectAll = false;
+		$('#filter-label-select-all').html('Deselect All');
+		$('#filter-label-select-all').removeClass('label-success');
+		$('#filter-label-select-all').addClass('label-warning');
+	}
+	else
+	{
+		labelSelectAll = true;
+		$('#filter-label-select-all').html('Select All');
+		$('#filter-label-select-all').removeClass('label-warning');
+		$('#filter-label-select-all').addClass('label-success');
 	}
 	
 	labelPopoverContent = $(this).closest('.popover-content').html();
@@ -804,13 +829,14 @@ $(document).on('mousemove', '#volume-slider', function(event){
 
 $(document).on('click', '#filter-label-select-all', function(event){
 
-	$('.filter-label').each(function(){
-		if (!$(this).hasClass('label-primary'))
-		{
-			$(this).trigger('click');
-		}
-	});
-
+	if (labelSelectAll)
+	{
+		$('.filter-label.label-default').trigger('click');
+	}
+	else
+	{
+		$('.filter-label.label-primary').trigger('click');
+	}
 });
 
 /* Document ready */
