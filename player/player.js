@@ -13,6 +13,7 @@ var commentAreaOpen = false;
 var labelFilterIds = new Array();
 var selectedLabelFilters = new Array();
 var newBeats = false;
+var allFiltersSelected = false;
 
 //Turn on autoplay automatically on first play
 var playerStopped = true;
@@ -274,15 +275,33 @@ function initializeFilters()
 				{
 					if ($.inArray(labelId, selectedLabelFilters) > -1)
 					{
+						//Turn button off
 						selectedLabelFilters.splice(selectedLabelFilters.indexOf(labelId), 1);
 						$(this).removeClass('btn-primary');
 						$(this).addClass('btn-default');
+						
+						if (allFiltersSelected)
+						{
+							$('#filter-label-select-all').addClass('btn-selected');
+							$('#filter-label-select-all').removeClass('btn-warning');
+							$('#filter-label-select-all').html('Select All Filters');
+							allFiltersSelected = false;
+						}
 					}
 					else
 					{
+						//Turn button on
 						selectedLabelFilters.push(labelId);
 						$(this).addClass('btn-primary');
 						$(this).removeClass('btn-default');
+						
+						if (selectedLabelFilters.length >= labelFilterIds.length)
+						{
+							$('#filter-label-select-all').removeClass('btn-selected');
+							$('#filter-label-select-all').addClass('btn-warning');
+							$('#filter-label-select-all').html('Deselect All Filters');
+							allFiltersSelected = true;
+						}
 					}
 				}
 			}
@@ -306,6 +325,20 @@ function initializeFilters()
 			$(this).addClass('btn-primary');
 			$(this).removeClass('btn-default');
 			newBeats = true;
+		}
+	});
+	
+	$(document).on('click', '#filter-label-select-all', function(event){
+		if (!newBeats)
+		{
+			if (allFiltersSelected)
+			{
+				$('.filter-label.btn-primary').trigger('click');
+			}
+			else
+			{
+				$('.filter-label.btn-default').trigger('click');
+			}
 		}
 	});
 }
@@ -407,11 +440,14 @@ function requestNewSong(requestId)
 	if (selectedLabelFilters.length <= 0 && !newBeats)
 	{
 		selectedLabelFilters = labelFilterIds.slice(0);
-		
 		$('.filter-label').each(function(event){
 			$(this).removeClass('btn-default');
 			$(this).addClass('btn-primary');
 		});
+		$('#filter-label-select-all').removeClass('btn-selected');
+		$('#filter-label-select-all').addClass('btn-warning');
+		$('#filter-label-select-all').html('Deselect All Filters');
+		allFiltersSelected = true;
 	}
 	
 	$('.foffbox-player-button').attr('disabled', false);
