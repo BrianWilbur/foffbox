@@ -19,6 +19,7 @@ var tickerInitialized = false;
 var volume = 50;
 
 //Labels currently included in the song queue
+var labelFilterIds = new Array();
 var selectedLabelFilters = new Array();
 var noSelectedFilters = true;
 
@@ -200,43 +201,18 @@ function initializePopover()
 		volumePopoverTextSet = true;
 	}
 	
-	if (!labelPopoverTextSet)
-	{
-		labelPopoverContent = "";
-		
-		//Initialize Quality popover
-		$('#foffbox-player-labels').popover({
-			container: 'body',
-			content: function() { return labelPopoverContent; },
-			html: true,
-			placement: 'top',
-			title: 'Filter by Song Type',
-			trigger: 'focus',
-		});
-		
-		$('#foffbox-player-labels').find('.popover-content').css('padding', '10px');
-		labelPopoverTextSet = true;
-	}
-	
 	//Toggle popovers on click
 	$('#foffbox-player-quality').on('click', function(event){
-		$('#foffbox-player-labels').popover('hide');
 		$('#foffbox-player-quality').popover('toggle');
 		$('#foffbox-player-volume').popover('hide');
 	});
 	$('#foffbox-player-volume').on('click', function(event){
-		$('#foffbox-player-labels').popover('hide');
 		$('#foffbox-player-quality').popover('hide');
 		$('#foffbox-player-volume').popover('toggle');
 	});
-	
 	$('#foffbox-player-labels').on('click', function(event){
-		$('#foffbox-player-labels').popover('toggle');
 		$('#foffbox-player-quality').popover('hide');
 		$('#foffbox-player-volume').popover('hide');
-		
-		configureSelectAllButton();
-		
 		$('#foffbox-player-labels').stop();
 		$('#foffbox-player-labels').css('color', '#555');
 	});
@@ -272,6 +248,47 @@ function initializePopover()
 }
 
 /*
+ * Initializes the actions for the "Filters" modal dialog.
+ */
+function initializeFilters()
+{
+	//Give it a "mouseover" class on hover and remove it on mouseout
+	$(document).on('mouseover', '.filter-label, #labelNewAndUnreleased', function(event){
+		$(this).addClass('btn-info');
+	});
+	
+	$(document).on('mouseout', '.filter-label, #labelNewAndUnreleased', function(event){
+		$(this).removeClass('btn-info');
+	});
+
+	//If the given label is actually valid, push/pop it from the stack on click
+	$(document).on('click', '.filter-label', function(event){
+		var labelId = $(this).attr('labelId');
+		console.log(labelId);
+		
+		if (labelId)
+		{
+			if ($.inArray(labelId, labelFilterIds))
+			{
+				console.log("Yo");
+				if ($.inArray(labelId, selectedLabelFilters))
+				{
+					selectedLabelFilters.splice(selectedLabelFilters.indexOf(labelId), 1);
+					$(this).removeClass('btn-primary');
+					$(this).addClass('btn-default');
+				}
+				else
+				{
+					selectedLabelFilters.push(labelId);
+					$(this).addClass('btn-primary');
+					$(this).removeClass('btn-default');
+				}
+			}
+		}
+	});
+}
+
+/*
  * Given an array with keys 'message' and 'dateSubmitted', this method
  * will render comment data inside the appropriate div.
  */
@@ -303,7 +320,6 @@ function renderComments(comments)
 function renderLabels(labels)
 {
 	$('#comment-labels').html('');
-	labelPopoverContent = '<div id="filter-label-select-all" class="label label-success">Select All</div>';
 	
 	if (labels.length > 0)
 	{
@@ -315,10 +331,6 @@ function renderLabels(labels)
 			var classString = labelSelected ? 'primary' : 'default';
 			
 			$('#comment-labels').append('<a class="comment-label label label-' + classString + '" labelId="' + labelId + '" style="display: inline-block !important;">' + labelName + '</a> ');
-			
-			var labelPopoverString = $.inArray(labelId, selectedLabelFilters) > -1 ? 'primary' : 'default';
-			var newString = '<div class="filter-label label label-' + labelPopoverString + '" labelId="' + labelId + '">' + labelName + '</div>';
-			labelPopoverContent += newString;
 		}
 	}
 	
@@ -372,52 +384,7 @@ function requestNewSong(requestId)
 	//If they haven't selected any filters, they must choose some
 	if (selectedLabelFilters.length <= 0)
 	{
-		//Disable all buttons
-		$('.foffbox-player-button').attr('disabled', true);
-		$('#foffbox-player-labels').attr('disabled', false);
-		$('#title-ticker-inner').html('');
-
-		noSelectedFilters = true;
-
-		$('#loading').hide();
-		$('#title-ticker-loading').hide('');
-		
-		$.ajax({
-			type: 'GET',
-			url: 'get-labels.php',
-			dataType: 'json',
-			success: function(data)
-			{
-				for (var i = 0; i < data['labels'].length; i++)
-				{
-					selectedLabelFilters.push(data['labels'][i]['id']);
-				}
-				renderLabels(data['labels']);
-				
-				//If they have a URL already in their hash, go to that ID. Otherwise, request a new (random) song.
-				var windowHash = window.location.hash;
-				windowHash = windowHash.replace('#', '');
-				
-				var validHash = false;
-				if (windowHash)
-				{
-					if (!isNaN(windowHash))
-					{
-						requestNewSong(windowHash);
-						validHash = true;
-					}
-					else
-					{
-						requestNewSong(0);
-					}
-				}
-				else
-				{
-					requestNewSong(0);
-				}
-			}
-		});
-		return;
+		selectedLabelFilters = labelFilterIds;
 	}
 	
 	$('.foffbox-player-button').attr('disabled', false);
@@ -650,33 +617,6 @@ function fixTicker()
 	marqueePlay();
 }
 
-/* Determines the current state of the Select/Deselect All button */
-function configureSelectAllButton()
-{
-	var allSelected = true;
-	$('.filter-label').each(function(){
-		if (!$(this).hasClass('label-primary'))
-		{
-			allSelected = false;
-		}
-	});
-	
-	if (allSelected == true)
-	{
-		labelSelectAll = false;
-		$('#filter-label-select-all').html('Deselect All');
-		$('#filter-label-select-all').removeClass('label-success');
-		$('#filter-label-select-all').addClass('label-warning');
-	}
-	else
-	{
-		labelSelectAll = true;
-		$('#filter-label-select-all').html('Select All');
-		$('#filter-label-select-all').removeClass('label-warning');
-		$('#filter-label-select-all').addClass('label-success');
-	}
-}
-
 /* Let the user select different labels */
 $(document).on('click', '.comment-label', function(event){
 
@@ -704,24 +644,6 @@ $(document).on('click', '.comment-label', function(event){
 		success: function(data) { },
 		error: function(err){ }
 	});
-});
-
-$(document).on('click', '.filter-label', function(event){
-	
-	var thisId = $(this).attr('labelId');
-	if ($.inArray(thisId, selectedLabelFilters) > -1)
-	{
-		selectedLabelFilters.splice(selectedLabelFilters.indexOf(thisId), 1);
-		$(this).removeClass('label-primary');
-		$(this).addClass('label-default');
-	}
-	else
-	{
-		selectedLabelFilters.push(thisId);
-		$(this).removeClass('label-default');
-		$(this).addClass('label-primary');
-	}
-	configureSelectAllButton()
 });
 
 /* When the "First" button is clicked, go back to the first song */
@@ -818,23 +740,11 @@ $(document).on('mousemove', '#volume-slider', function(event){
 	volumePopoverContent = $(this).closest('.popover-content').html();
 });
 
-/* Select/deselect all choices */
-$(document).on('click', '#filter-label-select-all', function(event){
-
-	if (labelSelectAll)
-	{
-		$('.filter-label.label-default').trigger('click');
-	}
-	else
-	{
-		$('.filter-label.label-primary').trigger('click');
-	}
-});
-
 /* Document ready */
 $(document).on('ready', function(){
 	initialize();
 	initializePopover();
+	initializeFilters();
 	
 	//Initialize the Youtube API Script
 	var tag = document.createElement('script');
@@ -849,7 +759,7 @@ $(document).on('ready', function(){
 	});
 	
 	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
-		if (!commentAreaOpen && selectedLabelFilters.length > 0)
+		if (!commentAreaOpen)
 		{
 			$('#foffbox-toolbar').trigger('mouseout');
 		}
@@ -857,7 +767,7 @@ $(document).on('ready', function(){
 	
 	/* Fade toolbar in/out when mousing over/mousing out of it */
 	$('#foffbox-toolbar').on('mouseout', function(event){
-		if ($('.popover-content').length <= 0 && !commentAreaOpen && selectedLabelFilters.length > 0)
+		if ($('.popover-content').length <= 0 && !commentAreaOpen)
 		{
 			$(this).stop();
 			$(this).fadeTo(3000, 0.20);
@@ -901,28 +811,5 @@ $(document).on('ready', function(){
 		});
 	}
 	
-	function emphasizeDropButton()
-	{
-		$('#foffbox-player-drop').animate({
-			color: '#17ADE8'
-		},
-		1000,
-		function() {
-			return deEmphasizeDropButton();
-		});
-	}
-	
-	function deEmphasizeDropButton()
-	{
-		$('#foffbox-player-drop').animate({
-			color: '#7AD2F5'
-		},
-		1000,
-		function() {
-			return emphasizeDropButton();
-		});
-	}
-	
 	emphasizeButton();
-	emphasizeDropButton();
 });

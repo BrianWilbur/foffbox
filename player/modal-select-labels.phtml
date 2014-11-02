@@ -15,8 +15,66 @@
 <div id="select-labels-modal" class="modal fade" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-body">
-				Hello world
+			<div class="modal-body" style="background-color: #333 !important; color:#EEE !important;">
+				<h2>Customize Your Playlist</h2>
+				<h4>Click below to filter out song types.</h4><br><br>
+
+				<?php
+					$allLabelIds = array();
+				
+					$connectionData = require("../server-config.php");
+					$connectionData = $connectionData['live'];
+
+					$pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
+
+					$sqlStatement = $pdo->prepare("SELECT * FROM `submissions_labelCounts`;");
+					$sqlStatement->execute();
+					$labelResults = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
+					
+					foreach ($labelResults as $labelResult)
+					{
+						$allLabelIds[] = intval($labelResult['labelId']);
+					}
+
+					if (!empty($labelResults))
+					{
+						echo <<<EOT
+
+						<div class="row">
+							<div class="col-md-6 col-md-offset-3">
+								<a id="labelSelectAll" class="btn btn-success btn-block" value="newSongs" style="text-align: center;">Select All</a>
+							</div>
+						</div><br>
+EOT;
+					
+						$i = 0;
+						echo('<div class="row">');
+						foreach ($labelResults as $labelResult)
+						{
+							echo('<div class="col-md-6">');
+							$id = $labelResult['labelId'];
+							$name = $labelResult['labelName'];
+							$numBeats = $labelResult['count'];
+							
+							echo("<a class='filter-label btn btn-default btn-block' labelId='$id' style='text-align:left !important;'>$name <span class='badge pull-right'>$numBeats</span></a>");
+							echo('</div>');
+							
+							$i++;
+							if ($i % 2 == 0)
+							{
+								echo('</div>');
+								echo('<div class="row">');
+							}
+						}
+						
+						echo <<<EOT
+							<div class="col-md-6">
+								<a id="labelNewAndUnreleased" class="btn btn-default btn-block" value="newSongs" style='text-align:left !important;'>New and Unrated Songs</a>
+							</div><br><br>
+						</div>
+EOT;
+					}
+				?>
 			</div>
 		</div>
 	</div>

@@ -197,3 +197,11 @@ html
 	color: #999 !important;
 	cursor: default !important;
 }
+
+/* Filters */
+.filter-label, #filter-label-select-all
+{
+	cursor: pointer;
+	display: block;
+	margin-bottom: 5px;
+}

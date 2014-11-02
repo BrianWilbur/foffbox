@@ -112,5 +112,10 @@
 		</nav>
 
 		<?php include("modal-drop-beats.phtml"); ?>
+		<?php include("modal-select-labels.phtml"); ?>
 	</body>
 </html>
+
+<script type="text/javascript">
+	labelFilterIds = <?php echo(json_encode($allLabelIds)); ?> 
+</script>

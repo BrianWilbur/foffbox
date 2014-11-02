@@ -33,7 +33,7 @@
 					<!-- Label selection -->
 					<?php
 						$configMode = 'live';
-						$connectionData = require_once("../server-config.php");
+						$connectionData = require("../server-config.php");
 						$connectionData = $connectionData[$configMode];
 						$pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
 						$sqlStatement = $pdo->prepare("SELECT `id`, `name` FROM `submissions_labels` WHERE `active` = 1");
