@@ -1,6 +1,13 @@
 <?php
 
 $requestId = intval($_POST['requestId']);
+$labelIds = json_decode($_POST['labelIds']);
+
+if (empty($labelIds))
+{
+	echo(json_encode(array('success' => false, 'message' => "No filters were selected!")));
+	return;
+}
 
 //Grab the total number of videos
 $configMode = 'live';
@@ -9,13 +16,40 @@ $connectionData = $connectionData[$configMode];
 $pdo = new PDO($connectionData['dsn'], $connectionData['username'], $connectionData['password']);
 
 //Get highest ID in DB (so we know what our rand range is)
-$sqlStatement = $pdo->prepare("SELECT MAX(`id`) as id FROM `submissions_archive`");
+//$sqlStatement = $pdo->prepare("SELECT MAX(`id`) as id FROM `submissions_archive`");
+$inStatement = implode(',', array_fill(0, count($labelIds), '?'));
+$sqlStatement = $pdo->prepare("
+	SELECT
+		`submissions_archive`.`id`,
+		`submissions_archive`.`youtubeUrl`,
+		`submissions_archive`.`message`,
+		`submissions_archive`.`views`,
+		`submissions_archiveLabels`.`submissionsLabelId`,
+		`submissions_archive`.`dateSubmitted`
+	FROM `submissions_archive`
+	JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+	GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+	HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+	ORDER BY `submissions_archive`.`id` DESC
+	LIMIT 1;
+");
+
+$i = 1;
+for ($j = 0; $j < 2; $j++)
+{
+	foreach ($labelIds as $labelId)
+	{
+		$sqlStatement->bindParam($i, $labelId);
+		$i++;
+	}
+}
+
 $sqlStatement->execute();
 $results = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
 
 if (empty($results))
 {
-	echo(json_encode(array('success' => false, 'message' => "Bummer. No videos were found.")));
+	echo(json_encode(array('success' => false, 'message' => "Bummer. No videos were found. E1005")));
 	return;
 }
 
@@ -36,24 +70,55 @@ else if ($requestId > $maxId)
 }
 
 //Now choose a video based on the input request ID. We account for invalid/nonexistent IDs here.
-$sqlStatement = $pdo->prepare("
+/*$sqlStatement = $pdo->prepare("
 	SELECT `id`, `youtubeUrl`, `message`, `views`, `dateSubmitted`
 	FROM `submissions_archive`
 	WHERE `id` >= :requestId
 	ORDER BY `id` ASC
 	LIMIT 1;
+");*/
+$sqlStatement = $pdo->prepare("
+	SELECT
+		`submissions_archive`.`id`,
+		`submissions_archive`.`youtubeUrl`,
+		`submissions_archive`.`message`,
+		`submissions_archive`.`views`,
+		`submissions_archiveLabels`.`submissionsLabelId`,
+		`submissions_archive`.`dateSubmitted`
+	FROM `submissions_archive`
+	JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+	WHERE `submissions_archive`.`id` >= ?
+	GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+	HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+	ORDER BY `submissions_archive`.`id` ASC
+	LIMIT 1;
 ");
-$sqlStatement->bindValue(':requestId', $requestId, PDO::PARAM_INT);
+
+$i = 1;
+$sqlStatement->bindParam($i, $requestId); $i++;
+for ($j = 0; $j < 2; $j++)
+{
+	foreach ($labelIds as $labelId)
+	{
+		$sqlStatement->bindParam($i, $labelId);
+		$i++;
+	}
+}
+
+$sqlStatement->execute();
+
+/*$sqlStatement->bindValue(':requestId', $requestId, PDO::PARAM_INT);*/
 $sqlStatement->execute();
 $results = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
 
 if (empty($results))
 {
-	echo(json_encode(array('success' => false, 'message' => "Bummer. No videos were found.")));
+	echo(json_encode(array('success' => false, 'message' => "Bummer. No videos were found. E1006")));
 	return;
 }
 
 $result = $results[0];
+$retrievedId = $result['id'];
 
 $views = intval($result['views']);
 $views++;
@@ -67,31 +132,37 @@ $sqlStatement->bindValue(':views', $views);
 $sqlStatement->bindValue(':id', $result['id']);
 $sqlStatement->execute();
 
-$retrievedId = $result['id'];
-
 //Get next lowest ID
 $sqlStatement = $pdo->prepare("
-	SELECT MAX(`id`) as nextId
+	SELECT MAX(`submissions_archive`.`id`) as `id`
 	FROM `submissions_archive`
-	WHERE `id` < :retrievedId
-	ORDER BY `id` ASC
+	JOIN `submissions_archiveLabels` ON `submissions_archive`.`id` = `submissions_archiveLabels`.`submissionsArchiveId`
+	WHERE `submissions_archive`.`id` < ?
+	GROUP BY `submissions_archiveLabels`.`submissionsArchiveId`
+	HAVING (SUM(`submissions_archiveLabels`.`submissionsLabelId` IN ($inStatement)) >= SUM(`submissions_archiveLabels`.`submissionsLabelId` NOT IN ($inStatement)))
+	ORDER BY `submissions_archive`.`id` ASC
 	LIMIT 1;
 ");
-$sqlStatement->bindValue(':retrievedId', $result['id'], PDO::PARAM_INT);
+$i = 1;
+$sqlStatement->bindParam($i, $result['id']); $i++;
+for ($j = 0; $j < 2; $j++)
+{
+	foreach ($labelIds as $labelId)
+	{
+		$sqlStatement->bindParam($i, $labelId);
+		$i++;
+	}
+}
 $sqlStatement->execute();
 $resultNextLowest = $sqlStatement->fetchAll(PDO::FETCH_ASSOC);
 
 if (empty($resultNextLowest))
 {
-	echo(json_encode(array('success' => false, 'message' => "Bummer. No videos were found.")));
-	return;
-}
-
-
-$resultNextLowest = $resultNextLowest[0]['nextId'];
-if (empty($resultNextLowest))
-{
 	$resultNextLowest = $maxId;
+}
+else
+{
+	$resultNextLowest = $resultNextLowest[0]['id'];
 }
 
 //Get the most recent 20 comments for the song

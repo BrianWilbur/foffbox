@@ -186,7 +186,7 @@ html
 }
 .foffbox-player-button:hover
 {
-	color: #44A650;
+	color: #44A650 !important;
 }
 .foffbox-player-button-active
 {

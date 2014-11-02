@@ -41,8 +41,14 @@
 
 .filter-label
 {
+	cursor: pointer;
 	display: block;
 	margin-bottom: 5px;
+}
+.filter-label:hover
+{
+	background-color: #5bc0de !important;
+	opacity: 1.0;
 }
 
 /* Popover Content -- Volume */

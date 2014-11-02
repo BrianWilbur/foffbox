@@ -18,7 +18,8 @@ var tickerInitialized = false;
 var volume = 50;
 
 //Labels currently included in the song queue
-var selectedLabelFilters;
+var selectedLabelFilters = new Array();
+var noSelectedFilters = true;
 
 //Turn on autoplay automatically on first play
 var playerStopped = true;
@@ -88,7 +89,10 @@ function onPlayerStateChange(event)
 {
 	if(event.data === 0)
 	{
-		shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
+		if (autoplay)
+		{
+			shuffle ? requestNewSong(-1) : requestNewSong(currentId+1);
+		}
 	}
 	
 	//Video is playing
@@ -197,7 +201,7 @@ function initializePopover()
 	
 	if (!labelPopoverTextSet)
 	{
-		labelPopoverContent = "Hi";
+		labelPopoverContent = "";
 		
 		//Initialize Quality popover
 		$('#foffbox-player-labels').popover({
@@ -219,7 +223,6 @@ function initializePopover()
 		$('#foffbox-player-quality').popover('toggle');
 		$('#foffbox-player-volume').popover('hide');
 	});
-	
 	$('#foffbox-player-volume').on('click', function(event){
 		$('#foffbox-player-labels').popover('hide');
 		$('#foffbox-player-quality').popover('hide');
@@ -227,7 +230,25 @@ function initializePopover()
 	});
 	
 	$('#foffbox-player-labels').on('click', function(event){
-		$('#foffbox-player-labels').popover('toggle');
+	
+		if (selectedLabelFilters.length <= 0)
+		{
+			$.ajax({
+				type: 'GET',
+				url: 'get-labels.php',
+				dataType: 'json',
+				success: function(data)
+				{
+					renderLabels(data['labels']);
+					$('#foffbox-player-labels').popover('toggle');
+				}
+			});
+		}
+		else
+		{
+			$('#foffbox-player-labels').popover('toggle');
+		}
+		
 		$('#foffbox-player-quality').popover('hide');
 		$('#foffbox-player-volume').popover('hide');
 	});
@@ -340,6 +361,7 @@ function requestNewSong(requestId)
 
 	//Set dat Foffbox player up again
 	$('#loading').show();
+	$('#loading').html('<img src="img/loading.gif"/>');
 	$('#foffbox-player-video').css('opacity', '0.0');
 	
 	//Clear out commend field & comments
@@ -358,6 +380,50 @@ function requestNewSong(requestId)
 	$('#title-ticker-inner').html('');
 	$('#title-ticker-loading').show();
 	
+	//If they haven't selected any filters, they must choose some
+	if (selectedLabelFilters.length <= 0)
+	{
+		//Disable all buttons
+		$('.foffbox-player-button').attr('disabled', true);
+		$('#foffbox-player-labels').attr('disabled', false);
+		$('#title-ticker-inner').html('');
+		
+		function emphasizeButton()
+		{
+			$('#foffbox-player-labels').animate({
+				color: '#D00000'
+			},
+			1000,
+			function() {
+				return deEmphasizeButton();
+			});
+		}
+		
+		function deEmphasizeButton()
+		{
+			$('#foffbox-player-labels').animate({
+				color: '#F26F6F'
+			},
+			1000,
+			function() {
+				return emphasizeButton();
+			});
+		}
+		
+		emphasizeButton();
+		noSelectedFilters = true;
+
+		$('#loading').html('Please select what type of music you\'d like to listen to by using the "Filters" button below.');
+		$('#title-ticker-loading').hide('');
+		return;
+	}
+	else
+	{
+		$('#foffbox-player-labels').stop();
+	}
+	
+	$('.foffbox-player-button').attr('disabled', false);
+	
 	//Ping DB and ask for a video
 	$.ajax({
 		type: 'POST',
@@ -365,7 +431,8 @@ function requestNewSong(requestId)
 		dataType: 'json',
 		data:
 		{
-			requestId:requestId
+			requestId:requestId,
+			labelIds:JSON.stringify(selectedLabelFilters)
 		},
 		success: function(data)
 		{
@@ -398,7 +465,6 @@ function requestNewSong(requestId)
 				var songDate = data['submissionDate'];
 				var songViews = data['views'];
 				var viewString = songViews <= 1 ? 'view' : 'views';
-				
 				
 				$('#foffbox-player-quote footer').html(songViews + " " + viewString + ". Dropped on " + songDate + ".");
 
@@ -613,7 +679,33 @@ $(document).on('click', '.comment-label', function(event){
 		success: function(data) { },
 		error: function(err){ }
 	});
+});
+
+$(document).on('click', '.filter-label', function(event){
 	
+	var thisId = $(this).attr('labelId');
+	if ($.inArray(thisId, selectedLabelFilters) > -1)
+	{
+		selectedLabelFilters.splice(selectedLabelFilters.indexOf(thisId), 1);
+		$(this).removeClass('label-primary');
+		$(this).addClass('label-default');
+	}
+	else
+	{
+		selectedLabelFilters.push(thisId);
+		$(this).addClass('label-primary');
+	}
+	
+	if (selectedLabelFilters.length > 0 && noSelectedFilters)
+	{
+		noSelectedFilters = false;
+		$('#toolbar-left .foffbox-player-button').attr('disabled', false);
+		$('#loading').html('Right on. Now, request a song using the "Next" button.');
+		$('#foffbox-player-labels').css('color', '#555');
+		$('#foffbox-player-labels').stop();
+	}
+	
+	labelPopoverContent = $(this).closest('.popover-content').html();
 });
 
 /* When the "First" button is clicked, go back to the first song */
@@ -721,11 +813,6 @@ $(document).on('ready', function(){
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	
-	//Initialize tooltips for the controls @ the bottom of the screen
-	$('.foffbox-player-button').tooltip({
-		container: 'body',
-		placement: 'top'
-	});
 	$('#request-slider').tooltip({
 		animation: false,
 		container: 'body',
@@ -733,7 +820,7 @@ $(document).on('ready', function(){
 	});
 	
 	$('#foffbox-player-quality').on('hidden.bs.popover', function() {
-		if (!commentAreaOpen)
+		if (!commentAreaOpen && selectedLabelFilters.length > 0)
 		{
 			$('#foffbox-toolbar').trigger('mouseout');
 		}
@@ -741,7 +828,7 @@ $(document).on('ready', function(){
 	
 	/* Fade toolbar in/out when mousing over/mousing out of it */
 	$('#foffbox-toolbar').on('mouseout', function(event){
-		if ($('.popover-content').length <= 0 && !commentAreaOpen)
+		if ($('.popover-content').length <= 0 && !commentAreaOpen && selectedLabelFilters.length > 0)
 		{
 			$(this).stop();
 			$(this).fadeTo(3000, 0.20);
@@ -751,5 +838,15 @@ $(document).on('ready', function(){
 	$('#foffbox-toolbar').on('mouseover', function(event){
 		$(this).stop();
 		$(this).fadeTo(50, 1.0);
+	});
+	
+	//Shuffle by default
+	$('#foffbox-player-shuffle').trigger('click');
+	$('#foffbox-player-autoplay').trigger('click');
+	
+	//Initialize tooltips for the controls @ the bottom of the screen
+	$('.foffbox-player-button').tooltip({
+		container: 'body',
+		placement: 'top'
 	});
 });
