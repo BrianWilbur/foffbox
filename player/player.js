@@ -315,7 +315,7 @@ function renderComments(comments)
 function renderLabels(labels)
 {
 	$('#comment-labels').html('');
-	labelPopoverContent = '';
+	labelPopoverContent = '<div id="filter-label-select-all" class="filter-label label label-primary">Select All</div>';
 	
 	if (labels.length > 0)
 	{
@@ -800,6 +800,17 @@ $(document).on('mousemove', '#volume-slider', function(event){
 	$(this).attr('value', volume);
 	player.setVolume(volume);
 	volumePopoverContent = $(this).closest('.popover-content').html();
+});
+
+$(document).on('click', '#filter-label-select-all', function(event){
+
+	$('.filter-label').each(function(){
+		if (!$(this).hasClass('label-primary'))
+		{
+			$(this).trigger('click');
+		}
+	});
+
 });
 
 /* Document ready */
